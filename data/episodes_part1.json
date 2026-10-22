@@ -1,0 +1,611 @@
+[
+  {
+    "id": 1,
+    "code": "EP01",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Indulto Neuronal (FWA Quarantine Dock)",
+    "game_node_code": "FWA QUARANTINE DOCK",
+    "game_location": "Muelle de Cuarentena Criogénica de la First World Alliance (FWA), Año 2027",
+    "cyberia_spoiler": "El ciber-hacker Zak es despertado del sueño criogénico en el año 2027 tras cinco años de condena por delitos informáticos. William Devlin, líder del consejo de la First World Alliance (FWA), le otorga un indulto forzoso: la inteligencia aliada detectó que el Cartel rival construye un arma secreta llamada 'Cyberia' en un complejo subterráneo de Siberia. Antes de partir, Devlin implanta y calibra en el cráneo de Zak el complejo óptico experimental BLADES (Biocybernetic Sensor: InfRared, Magnetic Resonance, Biometric Scan), ocultando en su interior un receptor de telemetría y apagado remoto.",
+    "hospital_counterpart": "Unidad de Reanimación Criogénica y Servidor Maestro de Historias Clínicas Electrónicas (EHR / HL7 FHIR R4)",
+    "clinical_protocol": "HL7 FHIR R4 / IEEE 11073-20601",
+    "iomt_asset": "Cápsula de Reanimación Criogénica & Implante Neuro-Óptico BLADES v19.96",
+    "mitre_technique": "T1195.002 - Compromise Software Supply Chain (Implant Firmware)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0101",
+        "cvss": 9.1,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Deserialización insegura en recursos HL7 FHIR Patient durante la descongelación criogénica y carga de firmware sin atestación criptográfica mutua en el implante óptico BLADES."
+      },
+      "detection": {
+        "engine": "BLADES Biometric DPI / Sigma",
+        "rule_name": "SIGMA_CRYO_FHIR_UNSIGNED_NEURAL_BOOT",
+        "signature": "alert tcp $EHR_SERVER any -> $BLADES_IMPLANT 11073 (msg:\"Unsigned Neural Firmware Block in IEEE 11073 Handshake\"; content:\"|00 F2 00 DE AD|\"; sid:2027001;)",
+        "telemetry_indicator": "Anomalía en registro PCR[0] del chip neuronal durante la fase de calibración óptica de Zak."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP01-NEURAL-ATTEST",
+        "immediate_response": "Aislamiento inmediato de la VLAN de reanimación criogénica, validación de hash SHA-3-512 del kernel BLADES y rotación de claves efímeras TLS 1.3 en el servidor FHIR.",
+        "cli_command": "blades-cli --verify-pcr 0..7 --isolate-vlan CRYO_DOCK_01 --rotate-fhir-keys"
+      },
+      "prevention": {
+        "standard": "IEC 62443-4-2 / FDA Premarket Cybersecurity Guidance",
+        "hardening_policy": "Exigir firma criptográfica de umbral (M-de-N) verificada por hardware TPM biomédico antes de cargar cualquier módulo en prótesis neuronales.",
+        "zero_trust_control": "Atestación continua de identidad de dispositivo médico implantable (IMD) en cada transacción HL7 FHIR."
+      }
+    }
+  },
+  {
+    "id": 2,
+    "code": "EP02",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Atraque en la Plataforma (RIG DOCK)",
+    "game_node_code": "RIG DOCK",
+    "game_location": "Muelle de atraque exterior de la plataforma petrolífera offshore The Rig, Mar del Norte",
+    "cyberia_spoiler": "Zak desembarca en plena noche desde una lancha furtiva en el muelle inferior de la plataforma petrolífera 'The Rig', controlada por el mercenario Santos, quien fue contratado por la FWA para entregarle a Zak el caza experimental TF-22. Al pisar las pasarelas metálicas oxidadas sobre el océano, Zak utiliza su visor para escanear el perímetro y percibe que los guardias de Santos mantienen posiciones tácticas de emboscada.",
+    "hospital_counterpart": "Pasarela Perimetral de Telemedicina Marítima y DMZ del Hospital de Campaña Offshore",
+    "clinical_protocol": "DICOM (TCP 104 / 2762) / IPSec",
+    "iomt_asset": "Gateway Satelital de Telemedicina Marítima & Nodo PACS Offshore",
+    "mitre_technique": "T1190 - Exploit Public-Facing Application (DICOM Edge Gateway)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0102",
+        "cvss": 8.4,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L",
+        "description": "Exposición de puertos de asociación DICOM sin validación criptográfica de AE Title en el concentrador de telemedicina del muelle marítimo."
+      },
+      "detection": {
+        "engine": "BLADES Infrared & Packet Scanner",
+        "rule_name": "YARA_DICOM_ROGUE_ASSOCIATE_RIG_DOCK",
+        "signature": "rule Dicom_Unauthorized_AE_RigDock { strings: $pdu = { 01 00 00 00 ?? ?? 00 01 } $ae = \"SANTOS_MERC_SCU\" condition: $pdu at 0 and $ae }",
+        "telemetry_indicator": "Ráfaga de solicitudes A-ASSOCIATE-RQ desde subredes marítimas no registradas hacia el PACS de triaje."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP02-DICOM-TLS",
+        "immediate_response": "Rechazo automático (A-ASSOCIATE-RJ) de nodos sin certificado cliente mTLS y encapsulamiento inmediato del enlace marítimo sobre túnel WireGuard.",
+        "cli_command": "medsoc-fw --drop-unauth-dicom --port 104,2762 --enforce-mtls RIG_DMZ"
+      },
+      "prevention": {
+        "standard": "DICOM PS3.15 Security Profiles / IEC 62443-3-3",
+        "hardening_policy": "Deshabilitar texto plano en puertos TCP 104 y forzar exclusivamente DICOM sobre TLS 1.3 con lista blanca estricta de Application Entities.",
+        "zero_trust_control": "Microperímetro ZTNA para unidades móviles de triaje marítimo."
+      }
+    }
+  },
+  {
+    "id": 3,
+    "code": "EP03",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Desarme frente a Gia (MEET GIA)",
+    "game_node_code": "MEET GIA",
+    "game_location": "Corredor blindado de acceso a la batería de artillería en The Rig",
+    "cyberia_spoiler": "Al avanzar por el corredor metálico de la plataforma, Zak es interceptado por Gia, la letal lugarteniente de Santos, quien le apunta directamente al rostro con su arma. Gia le ordena enfundar su pistola y girar lentamente con las manos visibles. Si el jugador tarda demasiado, intenta disparar a Gia o gira sin haber guardado el arma primero, Gia abre fuego a quemarropa y ejecuta a Zak en el acto. Al cumplir el protocolo de desarme, Gia baja su arma y lo escolta hacia la silla de artillería.",
+    "hospital_counterpart": "Esclusa de Control de Acceso Físico-Lógico y Motor UEBA de la Sala de Control UCI",
+    "clinical_protocol": "OSDP v2 (Open Supervised Device Protocol) / SAML 2.0 Biometric",
+    "iomt_asset": "Controlador Biométrico de Esclusa UCI & Terminal de Verificación de Guardia",
+    "mitre_technique": "T1078 - Valid Accounts / Behavioral Anomaly in Physical-Logical Airlock",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0103",
+        "cvss": 7.8,
+        "vector": "CVSS:3.1/AV:P/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Condición de carrera en la máquina de estados del lector biométrico de la esclusa que permite escalada de privilegios o disparo del bloqueo letal de emergencia ante latencia de respuesta."
+      },
+      "detection": {
+        "engine": "BLADES Biometric UEBA Engine",
+        "rule_name": "UEBA_AIRLOCK_HANDSHAKE_SEQUENCE_VIOLATION",
+        "signature": "event.module == 'osdp_airlock' AND auth.sequence != 'HOLSTER_TOKEN -> ROTATE_VERIFY' AND latency_ms > 2500",
+        "telemetry_indicator": "Desviación cinética y de secuencia en la validación de postura del operador frente al sensor óptico de Gia."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP03-UEBA-STEPDOWN",
+        "immediate_response": "Transición forzada de la sesión de Zak a modo de privilegio mínimo supervisado (Read-Only Escort Mode) y sincronización del token OSDP con clave AES-128.",
+        "cli_command": "blades-ueba --session zak_01 --mode supervised-escort --sync-osdp-scbk"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-207 (Zero Trust Architecture) / ISO 27799",
+        "hardening_policy": "Verificación continua de postura del dispositivo y del operador antes de conceder acceso a consolas de soporte vital.",
+        "zero_trust_control": "Autenticación adaptativa continua sensible al contexto físico y biométrico."
+      }
+    }
+  },
+  {
+    "id": 4,
+    "code": "EP04",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Defensa en la Silla de Artillería (SKEET SHOOT)",
+    "game_node_code": "SKEET SHOOT",
+    "game_location": "Torreta de cañón de plasma antiaéreo en la cubierta superior de The Rig",
+    "cyberia_spoiler": "Un escuadrón de cazas y bombarderos del Cartel lanza un ataque sorpresa masivo para destruir la plataforma antes de que Zak despegue. Gia lleva a Zak hasta la silla de artillería rotatoria. Zak debe operar los cañones gemelos de plasma guiándose por el radar circular para derribar los aviones enemigos mientras vigila los 6 indicadores azules de integridad estructural de la plataforma; si las bombas enemigas apagan los 6 nodos azules, la plataforma entera vuela en pedazos.",
+    "hospital_counterpart": "Centro de Mitigación Activa de DDoS Volumétrico sobre los 6 Nodos Críticos de Soporte Vital Hospitalario",
+    "clinical_protocol": "HL7 v2.5 MLLP / IEEE 11073 / BGP FlowSpec",
+    "iomt_asset": "6 Clústeres Azules de Soporte Vital (PACS, Infusión UCI, HIS, Gases SCADA, BSL-4, MedEvac)",
+    "mitre_technique": "T1498.001 - Network Denial of Service: Direct Network Flood",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0104",
+        "cvss": 9.6,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:H",
+        "description": "Agotamiento de la tabla de estados en los balanceadores clínicos por inundación volumétrica UDP/SYN dirigida simultáneamente contra los 6 clústeres de telemetría UCI."
+      },
+      "detection": {
+        "engine": "BLADES Radar Telemetry / eBPF Flow Monitor",
+        "rule_name": "SIGMA_DDOS_SIX_BLUE_HULL_NODES_CRITICAL",
+        "signature": "pps_rate > 500000 AND target_cluster IN ('NODE-01'..'NODE-06') AND hull_blue_indicator_integrity < 85%",
+        "telemetry_indicator": "Parpadeo crítico en los 6 indicadores cian (#29C2DA) del panel de integridad del hospital."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP04-XDP-TURRET",
+        "immediate_response": "Activación de filtrado eBPF/XDP a velocidad de línea en la tarjeta de red (Turret Scrubbing Mode) para derribar paquetes atacantes preservando el 100% del tráfico HL7/ECG.",
+        "cli_command": "medsoc-turret --enable-xdp-scrubber --protect-nodes NODE-01..NODE-06 --qos-ef-vital"
+      },
+      "prevention": {
+        "standard": "IEC 62443-3-3 SR 7.1 (Denial of Service Protection)",
+        "hardening_policy": "Reserva de ancho de banda dedicada mediante colas estrictas DSCP EF para telemetría de soporte vital y sumideros BGP Anycast.",
+        "zero_trust_control": "Aislamiento de plano de datos clínico respecto a enlaces expuestos a Internet."
+      }
+    }
+  },
+  {
+    "id": 5,
+    "code": "EP05",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "El Dilema de Gia y los Celos de Santos (BIG KISS)",
+    "game_node_code": "BIG KISS",
+    "game_location": "Pasarela exterior junto a la torreta antiaérea en The Rig",
+    "cyberia_spoiler": "Tras salvar la plataforma del bombardeo del Cartel, Gia se acerca a Zak llena de adrenalina y le ofrece un beso apasionado. El jugador enfrenta una bifurcación crucial: si Zak acepta y besa a Gia, Santos aparece en ese instante consumido por los celos y ordena a su matón golpear a Zak en la nuca, dejándolo inconsciente en el acto; si Zak se aparta y rechaza el beso, evita el golpe inmediato y camina hacia el ascensor por su cuenta.",
+    "hospital_counterpart": "Módulo de Prevención de Ingeniería Social, Insider Threat y Compromiso PAM por Conflicto Interno",
+    "clinical_protocol": "Kerberos / OAuth 2.0 OIDC Clinical PAM",
+    "iomt_asset": "Bóveda de Credenciales Privilegiadas (PAM) de Contratistas del Hospital",
+    "mitre_technique": "T1566 / T1078.004 - Social Engineering & Insider Privilege Abuse",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0105",
+        "cvss": 8.2,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:H/UI:R/S:C/C:H/I:H/A:H",
+        "description": "Violación de confianza lateral entre operadores privilegiados (Gia/Santos) que permite a un administrador celoso o malintencionado revocar abruptamente la sesión del auditor."
+      },
+      "detection": {
+        "engine": "BLADES Behavioral Insider Analytics",
+        "rule_name": "SIGMA_PAM_INSIDER_CONFLICT_SESSION_TERMINATION",
+        "signature": "event_type == 'PAM_SESSION_HIJACK' AND actor_group == 'SANTOS_CONTRACTORS' AND trigger == 'SOCIAL_PROXIMITY_ALERT'",
+        "telemetry_indicator": "Intento de invalidación hostil de token de sesión tras interacción no autorizada en el nodo BIG KISS."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP05-ZERO-TRUST-SESSION",
+        "immediate_response": "Rechazo de solicitud de vinculación no verificada (Reject Kiss Protocol), congelación de privilegios del grupo de contratistas de Santos y bloqueo de sesión con llave hardware FIDO2.",
+        "cli_command": "blades-pam --decline-unverified-handshake --freeze-group SANTOS_MERC --lock-fido2"
+      },
+      "prevention": {
+        "standard": "HIPAA Security Rule §164.308(a)(3) (Workforce Security)",
+        "hardening_policy": "Segregación estricta de funciones (SoD) y control dual para que ningún administrador tercero pueda suspender sesiones de auditoría forense.",
+        "zero_trust_control": "Sesiones efímeras Just-In-Time (JIT) sin confianza implícita entre operadores humanos."
+      }
+    }
+  },
+  {
+    "id": 6,
+    "code": "EP06",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Escáner Visor del Ascensor (GOING UP)",
+    "game_node_code": "GOING UP",
+    "game_location": "Elevador industrial hacia el puente grúa del hangar en The Rig",
+    "cyberia_spoiler": "Si Zak rechazó el beso de Gia en la pasarela, entra con ella al elevador de carga rumbo al hangar superior. Dentro de la cabina, Zak activa por primera vez la interfaz de escaneo directo de su implante BLADES sobre el panel electrónico del ascensor para descifrar el circuito de control e iniciar el ascenso hacia el nivel donde espera Santos.",
+    "hospital_counterpart": "Controlador PLC de Ascensores Quirúrgicos de Traslado Crítico (UCI a Quirófano)",
+    "clinical_protocol": "Modbus/TCP & BACnet/SC (Secure Connect)",
+    "iomt_asset": "PLC de Elevador de Pacientes Críticos & Lector Óptico BLADES",
+    "mitre_technique": "T0855 - Unauthorized Command Message (ICS/BMS Elevator Control)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0106",
+        "cvss": 7.5,
+        "vector": "CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:L/I:H/A:H",
+        "description": "Comandos Modbus Función 0x05 (Write Single Coil) sin autenticación en el bus del elevador quirúrgico que permiten redirigir o detener el traslado de pacientes UCI."
+      },
+      "detection": {
+        "engine": "BLADES Optical & Modbus DPI",
+        "rule_name": "SIGMA_MODBUS_ELEVATOR_COIL_OVERRIDE",
+        "signature": "modbus.func_code == 5 AND modbus.coil_addr == 0x0010 AND blades.biometric_signature == NULL",
+        "telemetry_indicator": "Escaneo óptico del panel GOING UP detecta bobinas lógicas expuestas sin firma criptográfica."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP06-BACNET-SC",
+        "immediate_response": "Inyección de comando de ascenso firmado criptográficamente por el visor BLADES y bloqueo de escrituras Modbus no autenticadas en el PLC del elevador.",
+        "cli_command": "blades-bms --sign-coil-write 0x0010 --upgrade-channel bacnet-sc-tls"
+      },
+      "prevention": {
+        "standard": "ASHRAE BACnet/SC & IEC 62443-3-2",
+        "hardening_policy": "Aislar los controladores de ascensores de emergencia médica en una VLAN OT dedicada con listas de control de acceso por dirección MAC y función Modbus.",
+        "zero_trust_control": "Validación biométrica en cabina para traslados prioritarios de quirófano."
+      }
+    }
+  },
+  {
+    "id": 7,
+    "code": "EP07",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Traición en el Puente Grúa (ZAPPED)",
+    "game_node_code": "ZAPPED",
+    "game_location": "Pasarela elevada sobre el hangar principal de The Rig",
+    "cyberia_spoiler": "Al salir del ascensor en la pasarela superior, Santos embosca a Zak y revela la verdad: sin importar si Zak besó o no a Gia, Santos ya vendió la misión y la vida de Zak al Cartel porque ofrecieron mejor precio que la FWA. El matón de Santos dispara un rifle de choque eléctrico que electrocuta a Zak ('ZAPPED') y lo derriba inconsciente. Mientras Santos celebra su traición, un diminuto dron espía volador de William Devlin graba todo en secreto desde las vigas del techo.",
+    "hospital_counterpart": "Detección de Traición en Cadena de Suministro (Supply Chain Attack) y Telemetría de Descarga no Autorizada en Desfibriladores en Red",
+    "clinical_protocol": "IEEE 11073 Defibrillator Profile / Out-of-Band Drone Telemetry",
+    "iomt_asset": "Desfibriladores Externos Automatizados en Red & Pasarela de Proveedor Externo",
+    "mitre_technique": "T1199 - Trusted Relationship (Third-Party Vendor Betrayal) & T0831 - Manipulation of Control",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0107",
+        "cvss": 9.4,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Backdoor en el túnel VPN del proveedor externo (Santos Logistics) que permite exfiltrar telemetría al Cartel y disparar descargas eléctricas remotas en equipos de cardiología."
+      },
+      "detection": {
+        "engine": "FWA Stealth Drone Out-of-Band Tap",
+        "rule_name": "YARA_SUPPLY_CHAIN_CARTEL_EXFIL_AND_ZAP",
+        "signature": "rule Santos_Betrayal_Zap { strings: $c2 = \"CARTEL_BID_ACCEPTED\" $zap = { FF EE 00 99 03 E8 } condition: $c2 and $zap }",
+        "telemetry_indicator": "El dron de auditoría fuera de banda captura el apretón de manos TLS con el Cartel y el pico de descarga de 360 Julios."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP07-VENDOR-SEVER",
+        "immediate_response": "Corte instantáneo de todas las sesiones BGP/VPN del socio externo comprometido y activación de amortiguador galvánico en el implante BLADES para sobrevivir a la electrocución.",
+        "cli_command": "medsoc-core --sever-partner SANTOS_RIG_VPN --clamp-voltage-surge 360J --archive-drone-pcap"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-161 (Cyber Supply Chain Risk Management)",
+        "hardening_policy": "Separar por hardware los circuitos de carga/descarga de desfibriladores respecto al módulo Wi-Fi de telemetría de mantenimiento.",
+        "zero_trust_control": "Monitoreo pasivo fuera de banda (Stealth Drone Tap) sobre toda actividad de proveedores terceros."
+      }
+    }
+  },
+  {
+    "id": 8,
+    "code": "EP08",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Despertar en la Morgue de Carga (EASY RIDE)",
+    "game_node_code": "EASY RIDE",
+    "game_location": "Bodega de almacenamiento inferior de The Rig con rejilla de alta tensión",
+    "cyberia_spoiler": "Zak despierta atado de pies y manos en el suelo de la oscura bodega de carga, justo al lado de una bomba de tiempo activada que cuenta regresivamente hacia la detonación. Santos se burla de él antes de marcharse, pero en su arrogancia da un paso en falso en la penumbra: pisa directamente sobre la rejilla metálica electrificada de alta tensión del suelo y muere horriblemente electrocutado y carbonizado frente a Zak.",
+    "hospital_counterpart": "Sistema de Aislamiento Eléctrico de Quirófano (Tablero IT / Monitor de Aislamiento de Línea LIM) y Morgue Clínica",
+    "clinical_protocol": "IEC 61850 / Modbus Power Telemetry",
+    "iomt_asset": "Tablero de Potencia Aislada de Quirófano (IPS) & Transformador de Aislamiento",
+    "mitre_technique": "T1499 / T0816 - Sabotage of Electrical Isolation & Scheduled Logic Bomb",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0108",
+        "cvss": 8.9,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:L/I:H/A:H",
+        "description": "Sabotaje en el Monitor de Aislamiento de Línea (LIM) que silencia la alarma de primera falla a tierra mientras programa una bomba lógica de apagado total del tablero eléctrico."
+      },
+      "detection": {
+        "engine": "BLADES Thermal & Differential Current Sensor",
+        "rule_name": "SIGMA_OR_POWER_GRID_LETHAL_ARC_FAULT",
+        "signature": "leakage_current_ma > 300 AND floor_grid_voltage > 2400 AND cron_job == 'detonate_rig_storage'",
+        "telemetry_indicator": "Descarga térmica masiva (carbonización del nodo hostil Santos) en la rejilla conductora y conteo regresivo activo."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP08-LIM-ISOLATE",
+        "immediate_response": "Aislamiento del segmento en cortocircuito mediante disyuntor diferencial de alta velocidad y congelación del hilo temporizador de la bomba lógica.",
+        "cli_command": "blades-power --isolate-fault-grid FLOOR_SECTOR_08 --suspend-timer BOMBD_PID"
+      },
+      "prevention": {
+        "standard": "IEC 60364-7-710 (Instalaciones Eléctricas en Locales Médicos Grupo 2)",
+        "hardening_policy": "Uso obligatorio de sistemas IT médicos con transformadores de aislamiento vigilados por relés analógicos no modificables por red.",
+        "zero_trust_control": "Verificación física de puesta a tierra equipotencial en quirófanos y salas críticas."
+      }
+    }
+  },
+  {
+    "id": 9,
+    "code": "EP09",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Cortocircuito y Cartucho de Energía (BIG SHOCK)",
+    "game_node_code": "BIG SHOCK",
+    "game_location": "Suelo electrificado junto al cadáver de Santos en la bodega de The Rig",
+    "cyberia_spoiler": "Con segundos antes de que la bomba estalle, Zak rueda por el suelo y acerca las ataduras de sus muñecas al borde de la rejilla electrificada para quemarlas con el arco voltaico sin morir electrocutado. Libre de las cuerdas, salta sobre el cadáver carbonizado de Santos, recupera su pistola láser del suelo y registra el cuerpo de Santos para extraer el Power Pack (cartucho de energía indispensable para recargar su arma).",
+    "hospital_counterpart": "Recuperación Forense de Tokens Criptográficos de Hardware (HSM / SmartCard) desde Nodos Siniestrados",
+    "clinical_protocol": "PKCS#11 / FIPS 140-3 HSM Recovery Protocol",
+    "iomt_asset": "Módulo de Seguridad de Hardware (PowerPack-HSM) & Terminal de Emergencia",
+    "mitre_technique": "T1552.004 - Unsecured Credentials: Private Keys / Hardware Token Recovery",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0109",
+        "cvss": 7.9,
+        "vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:L",
+        "description": "Persistencia de llaves maestras de autorización en el cartucho criptográfico de hardware (Power Pack) del operador caído tras un evento de sobretensión letal."
+      },
+      "detection": {
+        "engine": "BLADES Magnetic Resonance & PKCS#11 Monitor",
+        "rule_name": "SIGMA_HSM_TOKEN_EXTRACTION_POST_FAULT",
+        "signature": "pkcs11.event == 'TOKEN_EXTRACTED' AND source_node == 'SANTOS_ADMIN_CORPSE' AND voltage_spike == TRUE",
+        "telemetry_indicator": "Detección de acoplamiento del cartucho Power Pack en el bus de energía de Zak y desarme del temporizador explosivo."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP09-HSM-REBIND",
+        "immediate_response": "Revinculación criptográfica de emergencia del token Power Pack al implante BLADES de Zak y desactivación definitiva de la bomba lógica del almacén.",
+        "cli_command": "blades-hsm --claim-token POWERPACK_SANTOS --rebind-host ZAK_BLADES --disarm-bomb"
+      },
+      "prevention": {
+        "standard": "FIPS 140-3 Level 4 / ISO 27799",
+        "hardening_policy": "Configurar módulos criptográficos portátiles con borrado automático (Zeroization) ante pérdida de pulso biométrico del custodio asignado.",
+        "zero_trust_control": "Vinculación biométrica continua entre el portador y el token criptográfico de hardware."
+      }
+    }
+  },
+  {
+    "id": 10,
+    "code": "EP10",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Laberinto de Suministros y Francotirador (OPEN OCEAN)",
+    "game_node_code": "OPEN OCEAN",
+    "game_location": "Almacén de contenedores y escaleras de acceso al hangar en The Rig",
+    "cyberia_spoiler": "Zak sale de la cámara de la bomba hacia el laberinto de contenedores de carga abiertos a la brisa helada del océano. Un francotirador mercenario aguarda oculto en las sombras junto a la escalerilla metálica que sube al hangar. Zak utiliza el visor infrarrojo de BLADES para detectar el calor corporal del guardia tras las cajas y lo abate de un disparo certero antes de ascender.",
+    "hospital_counterpart": "Almacén Robotizado de Cadena de Frío Farmacéutica y Detección Infrarroja de Nodos Rogue Wi-Fi/RFID",
+    "clinical_protocol": "EPCglobal UHF RFID / IEEE 802.11ax Clinical Warehouse",
+    "iomt_asset": "Contenedores Inteligentes de Cadena de Frío (Oncología/Hemoderivados) & Sensores RFID",
+    "mitre_technique": "T1200 - Hardware Additions (Rogue Wireless / RFID Skimmer in Supply Chain)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0110",
+        "cvss": 8.1,
+        "vector": "CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L",
+        "description": "Despliegue de un transceptor oculto (Francotirador Lógico) entre los contenedores refrigerados que intercepta etiquetas RFID de fármacos críticos y ataca las sesiones del almacén."
+      },
+      "detection": {
+        "engine": "BLADES Infrared Thermal & RF Spectrum Analyzer",
+        "rule_name": "YARA_RFID_ROGUE_SNIPER_OPEN_OCEAN",
+        "signature": "rf_power_dbm > -25 AND thermal_hotspot_celsius > 36.8 AND mac_oui NOT IN ($HOSPITAL_APPROVED_OUI)",
+        "telemetry_indicator": "Firma térmica e infrarroja (#00F200) detectada tras el contenedor 04 junto a la escalera de enlace."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP10-ROGUE-NEUTRALIZE",
+        "immediate_response": "Contramedida dirigida de supresión RF y apagado administrativo del puerto PoE en el switch de distribución del almacén farmacéutico.",
+        "cli_command": "blades-rf --target-mac DE:AD:BE:EF:10:10 --poe-shutdown SW_PHARMA_PORT_09"
+      },
+      "prevention": {
+        "standard": "IEEE 802.1X EAP-TLS / GDP (Good Distribution Practice) Pharma",
+        "hardening_policy": "Autenticación mutua basada en certificados para cada lector RFID y sensor térmico del almacén clínico.",
+        "zero_trust_control": "Inspección continua del espectro radioeléctrico (WIPS) en zonas de almacenamiento médico."
+      }
+    }
+  },
+  {
+    "id": 11,
+    "code": "EP11",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Emboscada en la Pasarela Superior (CATWALK)",
+    "game_node_code": "CATWALK",
+    "game_location": "Puerta blindada superior de entrada al hangar del caza TF-22 en The Rig",
+    "cyberia_spoiler": "Zak sube por la escalerilla y atraviesa la compuerta hacia la pasarela superior del hangar. Es el momento más letal del Acto I: si el jugador no gira instantáneamente a la izquierda para activar el panel electrónico y bloquear la puerta que acaba de cruzar, un guardia aparece por detrás y lo ejecuta por la espalda; inmediatamente después de bloquear la puerta, Zak debe girarse hacia el frente y abatir al segundo guardia atrincherado tras las cajas de la pasarela.",
+    "hospital_counterpart": "Microsegmentación de Emergencia (Instant Port Lockdown) para Detener Movimiento Lateral de Ransomware en Dos Frentes",
+    "clinical_protocol": "SDN OpenFlow / SMBv3 / IEEE 802.1Q VLAN Tagging",
+    "iomt_asset": "Firewall de Segmentación Interna entre Almacén (VLAN 20) y Hangar MedEvac (VLAN 10)",
+    "mitre_technique": "T1021.002 - Lateral Movement: SMB/Windows Admin Shares (Two-Front Pincer Attack)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0111",
+        "cvss": 9.3,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Ventana de exposición de 800 ms durante la transición entre subredes donde un gusano de ransomware puede atacar por la retaguardia (VLAN de origen) mientras otro hilo ataca de frente."
+      },
+      "detection": {
+        "engine": "BLADES SDN Lateral Movement Detector",
+        "rule_name": "SIGMA_CATWALK_DUAL_VECTOR_LATERAL_PINCER",
+        "signature": "ingress_vlan == 20 AND egress_vlan == 10 AND rear_door_acl == 'OPEN' AND lateral_syn_burst > 50",
+        "telemetry_indicator": "Alerta de pinza bidireccional: intento de intrusión por el puerto trasero abierto y fuego de paquetes desde el segmento frontal."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP11-CATWALK-LOCKDOWN",
+        "immediate_response": "Cierre electrónico instantáneo de la compuerta lógica trasera (ACL Deny All en interfaz de retorno) en < 200 ms seguido de terminación activa del proceso hostil frontal.",
+        "cli_command": "medsoc-sdn --lock-rear-port VLAN20_TO_10 --kill-front-threat 10.10.11.54"
+      },
+      "prevention": {
+        "standard": "IEC 62443-3-3 SR 5.1 (Network Segmentation) / Zero Trust Microsegmentation",
+        "hardening_policy": "Compuertas lógicas unidireccionales y cierre automático por defecto tras cada cruce de sesión administrativa.",
+        "zero_trust_control": "Políticas de denegación total de tráfico este-oeste entre pisos y pabellones hospitalarios."
+      }
+    }
+  },
+  {
+    "id": 12,
+    "code": "EP12",
+    "act_number": 1,
+    "act": "ACTO I: PLATAFORMA OFFSHORE \"THE RIG\" (HOSPITAL DE CAMPAÑA MARÍTIMO Y NODO DE TRIAJE)",
+    "title": "Secuestro del TF-22 Transfighter (STEAL PLANE)",
+    "game_node_code": "STEAL PLANE",
+    "game_location": "Hangar principal de la plataforma The Rig, cabina del caza furtivo TF-22",
+    "cyberia_spoiler": "Con la pasarela despejada, Zak corre hasta el caza experimental furtivo TF-22 Transfighter estacionado en el hangar. Mientras los refuerzos de Santos disparan contra el blindaje de la nave, Zak salta dentro de la cabina, conecta su interfaz BLADES a la computadora de vuelo, resuelve la secuencia de ignición y despega a toda potencia por la rampa hacia el cielo ártico.",
+    "hospital_counterpart": "Aseguramiento de Unidad de Cuidados Intensivos Móvil / Ambulancia Aérea Autónoma (MedEvac TF-22) y Arranque Seguro (Secure Boot)",
+    "clinical_protocol": "ARINC 653 / IEEE 11073 Mobile ICU / UEFI Secure Boot",
+    "iomt_asset": "Unidad Aeromédica Autónoma de Soporte Vital Avanzado (MedEvac TF-22)",
+    "mitre_technique": "T1542.003 - Pre-OS Boot: Bootkit Prevention on Autonomous MedEvac",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0112",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Intento de bloqueo del cargador de arranque (Bootloader Lockout) y saturación del bus aviónico de soporte vital durante la secuencia de despegue de emergencia."
+      },
+      "detection": {
+        "engine": "BLADES Avionics & Secure Boot Verifier",
+        "rule_name": "SIGMA_TF22_MEDEVAC_IGNITION_TAMPER",
+        "signature": "arinc429.label == 0270 AND boot_stage == 'IGNITION_PREFLIGHT' AND external_hull_fire == TRUE",
+        "telemetry_indicator": "Verificación de firma criptográfica del kernel de vuelo y telemetría UCI móvil bajo ataque activo en el hangar."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP12-SECURE-IGNITION",
+        "immediate_response": "Inyección de llave de arranque maestro desde el implante BLADES, desacoplamiento físico/lógico de la red del hangar comprometido y despegue autónomo.",
+        "cli_command": "blades-avionics --inject-ignition-key TF22_ROOT --disconnect-hangar-lan --launch"
+      },
+      "prevention": {
+        "standard": "DO-326A (Airworthiness Security) / IEC 60601-1-12 (EMS Medical Equipment)",
+        "hardening_policy": "Particionamiento estricto de tiempo y espacio (ARINC 653) separando la navegación autónoma de los ventiladores y monitores UCI de cabina.",
+        "zero_trust_control": "Cadena de confianza medida por hardware (Measured Boot) desde la ROM hasta la consola clínica."
+      }
+    }
+  },
+  {
+    "id": 13,
+    "code": "EP13",
+    "act_number": 2,
+    "act": "ACTO II: RUTA DE EVACUACIÓN ÁRTICA Y TÚNELES DE SUMINISTRO (TELEMETRÍA EN TRÁNSITO)",
+    "title": "Rasante sobre el Mar de Barents (ISLAND RUN)",
+    "game_node_code": "ISLAND RUN",
+    "game_location": "Espacio aéreo a baja cota sobre el Mar de Barents e islas costeras",
+    "cyberia_spoiler": "El TF-22 vuela a velocidad supersónica a pocos metros sobre las aguas heladas del Mar de Barents. Zak opera el sistema de armas del caza para destruir lanchas patrulleras rápidas, helicópteros de combate y estaciones de radar costeras del Cartel instaladas sobre los islotes rocosos que intentan triangular su posición.",
+    "hospital_counterpart": "Protección de Enlaces Satelitales de Telemedicina en Tránsito contra Interferencia RF (Jamming) y Estaciones Base Falsas",
+    "clinical_protocol": "DVB-S2X Medical SatCom / TLS 1.3 DTLS",
+    "iomt_asset": "Transpondedor Satelital Banda Ku de Telemetría UCI en Vuelo",
+    "mitre_technique": "T0885 / T1498 - RF Jamming & Rogue Coastal Base Station Spoofing",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0213",
+        "cvss": 8.0,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:L/I:H/A:H",
+        "description": "Susceptibilidad del canal descendente de telemedicina satelital a ataques de interferencia de radiofrecuencia (Jamming) y suplantación de balizas desde los islotes costeros."
+      },
+      "detection": {
+        "engine": "BLADES Spectrum & SatCom Analyzer",
+        "rule_name": "SIGMA_SATCOM_BARENTS_RF_JAMMING_DETECTED",
+        "signature": "satcom.snr_db < 4.5 AND coastal_radar_lock == TRUE AND dtls_retransmits > 15%",
+        "telemetry_indicator": "Degradación brusca de SNR en el flujo de signos vitales en tránsito por barrido de radares hostiles en ISLAND RUN."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP13-FHSS-HOP",
+        "immediate_response": "Activación de salto de frecuencia por espectro ensanchado (FHSS) sincronizado con el satélite médico y supresión activa de los nodos emisores de interferencia.",
+        "cli_command": "tf22-satcom --enable-fhss-hop --null-steer-jammer ISLAND_RADAR_01..06"
+      },
+      "prevention": {
+        "standard": "ETSI EN 303 645 / NIST SP 800-53 SC-40 (Wireless Link Protection)",
+        "hardening_policy": "Antenas de arreglo en fase con conformación de haz adaptativa ( Null-Steering) e integridad criptográfica resistente a pérdida de paquetes.",
+        "zero_trust_control": "Autenticación mutua de tramas satelitales mediante DTLS 1.3 con rotación de claves por ráfaga."
+      }
+    }
+  },
+  {
+    "id": 14,
+    "code": "EP14",
+    "act_number": 2,
+    "act": "ACTO II: RUTA DE EVACUACIÓN ÁRTICA Y TÚNELES DE SUMINISTRO (TELEMETRÍA EN TRÁNSITO)",
+    "title": "Cañón de Hielo y Baterías SAM (VALLEY RUN)",
+    "game_node_code": "VALLEY RUN",
+    "game_location": "Desfiladeros glaciares estrechos en la ruta de infiltración ártica",
+    "cyberia_spoiler": "El computador de vuelo del TF-22 desciende hacia un estrecho cañón de paredes de hielo para volar por debajo de la cobertura de radar enemiga. Dentro del desfiladero, Zak debe reaccionar en fracciones de segundo para destruir baterías de misiles tierra-aire (SAM) apostadas en las laderas y cazas interceptores que emergen de frente.",
+    "hospital_counterpart": "Filtrado de Paquetes Maliciosos de Baja Latencia en Pasarelas de Borde (Edge Medical Gateways)",
+    "clinical_protocol": "HL7 v2.5 MLLP / FHIR Streaming over QUIC",
+    "iomt_asset": "Pasarelas Clínicas de Borde (Edge Gateways) y Routers de Telemetría",
+    "mitre_technique": "T1203 - Exploitation for Client Execution (Malformed HL7 MLLP Packet Injection)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0214",
+        "cvss": 8.5,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H",
+        "description": "Desbordamiento de búfer en el parser legado MLLP de los gateways de borde cuando reciben ráfagas de segmentos HL7 OBX fragmentados lanzados como proyectiles SAM."
+      },
+      "detection": {
+        "engine": "BLADES Inline Edge IPS",
+        "rule_name": "YARA_HL7_MLLP_SAM_PAYLOAD_OVERFLOW",
+        "signature": "rule HL7_ValleyRun_Overflow { strings: $mllp = { 0B 4D 53 48 7C } $nop = { 90 90 90 90 90 90 } condition: $mllp at 0 and $nop }",
+        "telemetry_indicator": "Detección de shellcode oculto en segmentos de observación clínica disparados desde los nodos laterales del cañón."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP14-INLINE-DROP",
+        "immediate_response": "Intercepción y destrucción en línea (Inline IPS Drop) de los paquetes MLLP malformados en < 50 microsegundos antes de que impacten el procesador central.",
+        "cli_command": "blades-edge-ips --intercept-mllp-burst --sanitize-obx-frames --keep-session-alive"
+      },
+      "prevention": {
+        "standard": "IEC 62443-4-1 (Secure Product Development Lifecycle)",
+        "hardening_policy": "Reemplazar analizadores sintácticos HL7 escritos en C/C++ por parsers verificados en memoria segura (Rust/Ruby congelado) con límites estrictos de longitud de campo.",
+        "zero_trust_control": "Inspección profunda de esquema (Schema Validation) en cada pasarela de borde antes de enrutar al núcleo."
+      }
+    }
+  },
+  {
+    "id": 15,
+    "code": "EP15",
+    "act_number": 2,
+    "act": "ACTO II: RUTA DE EVACUACIÓN ÁRTICA Y TÚNELES DE SUMINISTRO (TELEMETRÍA EN TRÁNSITO)",
+    "title": "Turbulencia en la Tormenta Polar (ROUGH RIDE)",
+    "game_node_code": "ROUGH RIDE",
+    "game_location": "Corredor aéreo ártico bajo tormenta de nieve y turbulencia severa",
+    "cyberia_spoiler": "Una violenta tormenta polar nocturna azota al TF-22 reduciendo la visibilidad óptica a cero y sacudiendo la cabina con turbulencia extrema. En medio de la ventisca, oleadas de cazas del Cartel atacan desde ángulos ciegos; Zak debe confiar plenamente en los sensores de su implante BLADES y en la retícula predictiva para derribarlos sin perder el control del avión.",
+    "hospital_counterpart": "Resiliencia de Sensores Biométricos y Bombas de Infusión ante Ruido Electromagnético Extremo y Jitter de Red",
+    "clinical_protocol": "IEEE 1588 PTP (Precision Time Protocol) / IEEE 11073",
+    "iomt_asset": "Monitores Multiparamétricos de Signos Vitales (ECG/SpO2/IBP) & Bombas de Infusión",
+    "mitre_technique": "T0832 - Manipulation of View / Electromagnetic Noise & Time-Sync Spoofing",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0215",
+        "cvss": 7.7,
+        "vector": "CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:H",
+        "description": "Inducción de falsas alarmas de fibrilación ventricular y desincronización de marcas de tiempo clínicas debido a ruido electromagnético extremo y ataques de Jitter NTP/PTP."
+      },
+      "detection": {
+        "engine": "BLADES Kalman Filter & PTP Integrity Monitor",
+        "rule_name": "SIGMA_BIOMETRIC_STORM_NOISE_VS_INJECTION",
+        "signature": "ptp.offset_ns > 50000 AND ecg.baseline_wander_hz > 40 AND spo2.pleth_correlation == VALID",
+        "telemetry_indicator": "Discrepancia entre el ruido eléctrico en el canal ECG y la onda pletismográfica óptica estable durante ROUGH RIDE."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP15-KALMAN-STABILIZE",
+        "immediate_response": "Activación del filtro adaptativo Kalman en el procesador BLADES para suprimir el ruido de tormenta y conmutación a reloj atómico local de respaldo.",
+        "cli_command": "blades-vitals --enable-kalman-denoise --lock-ptp-grandmaster LOCAL_RUBIDIUM"
+      },
+      "prevention": {
+        "standard": "IEC 60601-1-2 (Compatibilidad Electromagnética en Equipos Médicos)",
+        "hardening_policy": "Blindaje de cables de paciente, filtrado notch por hardware y fusión multimodal de sensores antes de disparar actuaciones clínicas automáticas.",
+        "zero_trust_control": "Sincronización de tiempo autenticada criptográficamente (NTS - Network Time Security)."
+      }
+    }
+  },
+  {
+    "id": 16,
+    "code": "EP16",
+    "act_number": 2,
+    "act": "ACTO II: RUTA DE EVACUACIÓN ÁRTICA Y TÚNELES DE SUMINISTRO (TELEMETRÍA EN TRÁNSITO)",
+    "title": "Puerto Militar de Arcángel (PORT FLYBY)",
+    "game_node_code": "PORT FLYBY",
+    "game_location": "Puerto industrial y militar fortificado de Archangel (Arcángel), Norte de Rusia",
+    "cyberia_spoiler": "El TF-22 irrumpe a baja altura sobre el gigantesco puerto militar de Archangel en la costa rusa, fuertemente defendido por destructores, grúas y baterías antiaéreas del Cartel. La computadora de a bordo y el visor BLADES resaltan con un intenso brillo verde el objetivo crítico: el generador de escudo principal del puerto. Zak debe concentrar todo su fuego sobre ese nodo verde en una única pasada a alta velocidad para colapsar las defensas y abrir la entrada al túnel subterráneo.",
+    "hospital_counterpart": "Identificación y Desmantelamiento de Servidor C2 Sinkhole / Cortafuegos Inverso Malicioso en el Nodo Logístico Portuario",
+    "clinical_protocol": "TLS 1.3 Inspection / BGP Sinkhole / TUF (The Update Framework)",
+    "iomt_asset": "Repositorio Central de Actualizaciones de Firmware Clínico y Logística Portuaria",
+    "mitre_technique": "T1102 / T1584.004 - Web Service C2 & Compromise Infrastructure: Server",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0216",
+        "cvss": 9.2,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Servidor proxy inverso malicioso (el Generador Verde de Archangel) infiltrado en el nodo portuario que intercepta y envenena las actualizaciones de software del hospital."
+      },
+      "detection": {
+        "engine": "BLADES Visual Target Highlighter (#00F200)",
+        "rule_name": "SIGMA_ARCHANGEL_GREEN_SHIELD_C2_NODE",
+        "signature": "tls.ja3_hash == 'e7d705a3286e19ea42f587b344ee6865' AND node_role == 'PORT_SHIELD_PROXY'",
+        "telemetry_indicator": "El visor BLADES ilumina en verde brillante (#00F200) el servidor proxy que protege la red C2 del Cartel en el puerto."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP16-GREEN-NODE-TAKEDOWN",
+        "immediate_response": "Neutralización quirúrgica del servidor C2 verde mediante revocación de ruta BGP y purga del certificado raíz falso en todos los servidores hospitalarios.",
+        "cli_command": "medsoc-strike --takedown-c2 195.88.16.200 --revoke-ca ARCHANGEL_ROGUE_CA"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-147B / The Update Framework (TUF)",
+        "hardening_policy": "Distribución de parches y actualizaciones de equipos médicos firmada con claves offline multi-rol para que ningún servidor de tránsito pueda alterar los paquetes.",
+        "zero_trust_control": "Verificación criptográfica de extremo a extremo independiente del transporte de red."
+      }
+    }
+  }
+]
+

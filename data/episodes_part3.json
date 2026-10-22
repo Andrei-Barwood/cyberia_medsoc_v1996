@@ -1,0 +1,611 @@
+[
+  {
+    "id": 33,
+    "code": "EP33",
+    "act_number": 4,
+    "act": "ACTO IV: COMPLEJO CYBERIA - NIVEL 2 (LABORATORIOS DE BIOCONTENCIÓN, GAS HALÓN Y NANOMEDICINA)",
+    "title": "La Consola de Nanomedicina (DRUG STORE)",
+    "game_node_code": "DRUG STORE",
+    "game_location": "Laboratorio de Nanomedicina y Microbiología del Nivel 2 (DRUG STORE)",
+    "cyberia_spoiler": "Las alarmas biológicas del Nivel 2 anuncian la liberación de un virus letal mutagénico en los corredores profundos. Zak entra en el laboratorio médico ('DRUG STORE') y se sienta ante la consola de nanomedicina. En pantalla aparecen 3 compuestos experimentales; al elegir el antídoto correcto, se activa un visor microscópico interactivo en tiempo real donde Zak debe disparar pulsos médicos contra las cepas virales antes de que se multipliquen e invadan toda la muestra sanguínea, sintetizando así la fórmula y el código numérico de purga.",
+    "hospital_counterpart": "Consola Interactiva Nanomedicine EDR/XDR Inoculator — Neutralización en Tiempo Real de Ransomware en el Kernel de Bombas de Infusión Inteligentes",
+    "clinical_protocol": "IEEE 11073 Infusion Pump Kernel / eBPF Live Memory Patching",
+    "iomt_asset": "Clúster de Bombas de Infusión Inteligentes UCI y Estación de Síntesis de Antídotos EDR",
+    "mitre_technique": "T1486 / T0800 - Data Encrypted for Impact & Rootkit Neutralization in Medical RTOS",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0433",
+        "cvss": 10.0,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Infección activa por ransomware polimórfico bio-digital (CYBERIA-RANSOM-ALPHA) en la memoria RTOS de las bombas de infusión que se autorreplica cada segundo e intenta alterar las dosis de fármacos vasoactivos."
+      },
+      "detection": {
+        "engine": "BLADES Microscopic Kernel EDR Scanner",
+        "rule_name": "YARA_DRUG_STORE_INFUSION_KERNEL_PATHOGEN",
+        "signature": "rule Cyberia_Infusion_Strain { strings: $mut = { 00 F2 00 30 FF 00 83 FF 65 } $hook = \"rtos_bolus_override\" condition: $mut and $hook }",
+        "telemetry_indicator": "Multiplicación exponencial de hilos patógenos (#00F200) detectada en el visor microscópico de la consola DRUG STORE."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP33-NANOMED-SYNTH",
+        "immediate_response": "Selección del perfil heurístico COMPOUND-ALPHA e inyección interactiva de micro-parches en memoria (Live Kernel Shooting) hasta erradicar el 100% de los patógenos y generar el token de inoculación.",
+        "cli_command": "blades-nanomed --select-antidote ANTIDOTE-01 --live-purge-kernel ICU_PUMPS --emit-token CYB-3334-ALPHA"
+      },
+      "prevention": {
+        "standard": "FDA Postmarket Management of Cybersecurity in Medical Devices / IEC 62304",
+        "hardening_policy": "Ejecución de procesos de dosificación farmacológica dentro de enclaves de memoria firmados por hardware con listas blancas inmutables de llamadas al sistema.",
+        "zero_trust_control": "Verificación continua de integridad de memoria RAM en bombas de infusión cada 100 ms."
+      }
+    }
+  },
+  {
+    "id": 34,
+    "code": "EP34",
+    "act_number": 4,
+    "act": "ACTO IV: COMPLEJO CYBERIA - NIVEL 2 (LABORATORIOS DE BIOCONTENCIÓN, GAS HALÓN Y NANOMEDICINA)",
+    "title": "Cruce de la Zona Contaminada e Inoculador (UNSAFE DOOR)",
+    "game_node_code": "UNSAFE DOOR",
+    "game_location": "Corredor biológico sellado y plataforma circular del Inoculador en el Nivel 2",
+    "cyberia_spoiler": "Con el código del antídoto memorizado, Zak abre la compuerta de peligro biológico ('UNSAFE DOOR') y se adentra en la zona altamente contaminada. El virus ataca su organismo al instante y su indicador de energía vital cae en picada segundo a segundo. Zak debe correr hacia la consola del extremo opuesto, teclear sin errores el código sintetizado en DRUG STORE y subirse a la plataforma luminosa del Inoculador, donde un haz de purga celular elimina el virus de su torrente sanguíneo antes de que muera.",
+    "hospital_counterpart": "Ejecución de Protocolo de Cuarentena en Zona Roja, Desinfección Criptográfica de Endpoints Comprometidos y Restauración desde Imágenes Inmutables",
+    "clinical_protocol": "PXE Cleanroom Secure Re-Imaging / TPM 2.0 Sealed Storage",
+    "iomt_asset": "Cámara de Inoculación y Desinfección de Endpoints Clínicos (Cleanroom Pod)",
+    "mitre_technique": "T1490 - Inhibit System Recovery (Countered via Immutable Golden Image Inoculation)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0434",
+        "cvss": 9.6,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Drenaje acelerado de integridad vital (Vital Integrity Drop > 8%/sec) al transitar por la subred contaminada sin haber aplicado el sello de inoculación criptográfica."
+      },
+      "detection": {
+        "engine": "BLADES Biometric Vital Watchdog",
+        "rule_name": "SIGMA_UNSAFE_DOOR_VIRAL_INTEGRITY_HEMORRHAGE",
+        "signature": "sector == 'BIOHAZARD_RED_ZONE_34' AND host_integrity_percent < 35 AND inoculator_pod == 'STANDBY'",
+        "telemetry_indicator": "Caída crítica de signos vitales en el monitor ECG de Zak tras cruzar el umbral UNSAFE DOOR."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP34-INOCULATOR-PURGE",
+        "immediate_response": "Ingreso del token criptográfico CYB-3334-ALPHA en la terminal de bio-purga y activación del haz del Inoculador para restaurar la imagen limpia y llevar la salud al 100%.",
+        "cli_command": "medsoc-inoculator --token CYB-3334-ALPHA --step-on-pad ZAK_HOST --restore-golden-image"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-88 Rev. 1 (Media Sanitization) & IEC 62443-3-3 SR 7.3",
+        "hardening_policy": "Estaciones de purga y re-aprovisionamiento automatizado (Inoculator Pods) conectadas a almacenamiento ROM de solo lectura para restaurar equipos comprometidos en segundos.",
+        "zero_trust_control": "Bloqueo automático de salida de Zona Roja para cualquier nodo que no presente certificado de inoculación vigente."
+      }
+    }
+  },
+  {
+    "id": 35,
+    "code": "EP35",
+    "act_number": 4,
+    "act": "ACTO IV: COMPLEJO CYBERIA - NIVEL 2 (LABORATORIOS DE BIOCONTENCIÓN, GAS HALÓN Y NANOMEDICINA)",
+    "title": "Escaneo MRI de las Bombas Hidráulicas (GRAFFITI)",
+    "game_node_code": "GRAFFITI",
+    "game_location": "Interior del ascensor profundo bloqueado con marcas de grafiti hacia el Núcleo Cyberia",
+    "cyberia_spoiler": "Superada la zona viral, Zak entra en el ascensor de descenso profundo pero la cabina está muerta y la pared interior sólo muestra marcas de grafiti industrial ('GRAFFITI'). Zak activa el escáner de Resonancia Magnética (MRI) del implante BLADES para atravesar visualmente el muro metálico y descubre el circuito hidráulico oculto: 4 válvulas periféricas y 1 bomba maestra central. Si activa la bomba central primero, el circuito colapsa; debe abrir primero las 4 válvulas periféricas y finalmente encender la bomba central para descender al núcleo.",
+    "hospital_counterpart": "Calibración por Escaneo MRI y Aseguramiento de Bombas de Circulación Extracorpórea (ECMO), Hemodiálisis y Presión Hidráulica Crítica",
+    "clinical_protocol": "IEC 60601-2-16 (Hemodialysis) & Extracorporeal Life Support (ECLS/ECMO) Bus",
+    "iomt_asset": "Consola de Perfusión Extracorpórea (ECMO), Bombas de Hemodiálisis y Circuito Hidráulico de Biocontención",
+    "mitre_technique": "T0836 / T0831 - Manipulation of Hydraulic/Perfusion Valve Sequence",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0435",
+        "cvss": 9.4,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:N/I:H/A:H",
+        "description": "Desincronización inducida en el firmware de las 4 electroválvulas de línea (venosa, oxigenador, intercambiador térmico y filtro arterial); arrancar el rotor maestro con las válvulas cerradas genera sobrepresión letal."
+      },
+      "detection": {
+        "engine": "BLADES MRI Deep-Wall Hydraulic Scanner",
+        "rule_name": "SIGMA_GRAFFITI_ECMO_HYDRAULIC_VALVE_MISMATCH",
+        "signature": "mri_overlay == 'ACTIVE' AND (valve_1 == 'CLOSED' OR valve_2 == 'CLOSED' OR valve_3 == 'CLOSED' OR valve_4 == 'CLOSED') AND main_pump_cmd == 'START'",
+        "telemetry_indicator": "El visor translúcido MRI (#249BA7 / #B2E5F2) revela las 4 válvulas periféricas obstruidas detrás del panel con grafiti."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP35-VALVE-ALIGN",
+        "immediate_response": "Alineación secuencial de las 4 válvulas periféricas (V1..V4 = OPEN) mediante el simulador MRI de BLADES antes de energizar la bomba maestra central.",
+        "cli_command": "blades-mri --open-valves V1,V2,V3,V4 --verify-laminar-flow --start-main-pump GRAFFITI_LIFT"
+      },
+      "prevention": {
+        "standard": "IEC 60601-2-24 / ISO 8637 (Extracorporeal Systems for Blood Purification)",
+        "hardening_policy": "Enclavamiento mecánico y de firmware que bloquea el impulsor centrífugo principal hasta recibir confirmación ultrasónica de flujo abierto en las 4 líneas periféricas.",
+        "zero_trust_control": "Inspección no invasiva de estado interno de actuadores antes de cada ciclo de perfusión."
+      }
+    }
+  },
+  {
+    "id": 36,
+    "code": "EP36",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "El Laboratorio Criogénico Subterráneo (Cryo-Stasis Chamber)",
+    "game_node_code": "CRYO-STASIS CHAMBER",
+    "game_location": "Bóvedas criogénicas profundas en el nivel más bajo del Complejo Cyberia",
+    "cyberia_spoiler": "El ascensor hidráulico deposita a Zak en las heladas bóvedas subterráneas del núcleo ('Cryo-Stasis Chamber'), donde cilindros de cristal iluminados en verde y cian conservan en estasis criogénica tejidos biomecánicos y clones experimentales cultivados por los científicos del proyecto Cyberia.",
+    "hospital_counterpart": "Monitoreo de Telemetría Térmica e Infrarroja en Ultracongeladores (-80°C y Nitrógeno Líquido -196°C) de Biobanco Genético y Órganos para Trasplante",
+    "clinical_protocol": "OPC-UA Cryo Telemetry / Modbus PT100 Resistance Thermometry",
+    "iomt_asset": "Tanques de Nitrógeno Líquido (-196°C) de Biobanco de Tejidos, Células Madre y Órganos",
+    "mitre_technique": "T0856 - Spoof Reporting Message (Cryogenic Sensor Replay Attack)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0536",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:C/C:L/I:H/A:H",
+        "description": "Ataque de repetición (Replay Attack) en el bus de telemetría de las cápsulas de criopreservación para ocultar una fuga de nitrógeno líquido y degradar los tejidos biológicos."
+      },
+      "detection": {
+        "engine": "BLADES Infrared Thermography vs. OPC-UA Comparator",
+        "rule_name": "SIGMA_CRYO_CHAMBER_INFRARED_REPLAY_DIVERGENCE",
+        "signature": "opcua.reported_temp_c == -196.0 AND blades.ir_measured_temp_c > -140.0",
+        "telemetry_indicator": "Divergencia térmica de +56°C detectada por el sensor infrarrojo de Zak frente al valor estático reportado por la red."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP36-CRYO-NONCE",
+        "immediate_response": "Purga del flujo de telemetría falsificado, exigencia de Nonce criptográfico por muestra térmica y apertura de la válvula de emergencia de nitrógeno líquido.",
+        "cli_command": "blades-cryo --inject-ln2-reserve CHAMBER_36 --enforce-opcua-nonce --seal-biobank"
+      },
+      "prevention": {
+        "standard": "FDA 21 CFR Part 11 / ISBER Best Practices for Biorepositories",
+        "hardening_policy": "Doble lazo de medición térmica independiente (fibra óptica con rejilla de Bragg + sonda PT100 cifrada) con registro inmutable.",
+        "zero_trust_control": "Validación cruzada físico-óptica continua sobre cada contenedor criogénico."
+      }
+    }
+  },
+  {
+    "id": 37,
+    "code": "EP37",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "Interceptación de Telemetría de Zimmer (Scientist Dossier)",
+    "game_node_code": "SCIENTIST DOSSIER",
+    "game_location": "Consola maestra de investigación del Dr. Zimmer en el laboratorio del núcleo",
+    "cyberia_spoiler": "Zak accede a los diarios científicos y grabaciones del Dr. Zimmer ('Scientist Dossier'), el cerebro detrás del proyecto. Allí se revela la naturaleza real de 'Cyberia': no es un misil ni una bomba química convencional, sino un organismo biomecánico viviente cultivado con nanotecnología y tejido genético que crece como un caparazón/nave espacial consciente y necesita fusionarse con un huésped humano cibernéticamente compatible.",
+    "hospital_counterpart": "Detección y Decompilación Forense de Amenaza Persistente Avanzada (APT) Basada en Código Bio-Sintético Autónomo e IA Mutante",
+    "clinical_protocol": "DICOM-SR (Structured Reporting) / Genomic FASTA/BAM Pipeline Security",
+    "iomt_asset": "Secuenciadores Genómicos de Alto Rendimiento y Clúster de Entrenamiento de IA Biomédica",
+    "mitre_technique": "T1027 / AML.T0043 - Autonomous Self-Mutating Bio-Digital Artifact",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0537",
+        "cvss": 9.9,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Síntesis de un artefacto bio-cibernético autónomo (Proyecto Cyberia del Dr. Zimmer) capaz de reescribir su propia estructura binaria y acoplarse directamente a interfaces neuronales."
+      },
+      "detection": {
+        "engine": "BLADES Genomic-Binary Decompiler",
+        "rule_name": "YARA_ZIMMER_LIVING_WEAPON_GENOMIC_BLUEPRINT",
+        "signature": "rule Zimmer_Cyberia_Entity { strings: $dna = \"NANOTECH_SYMBIONT_HOST_REQUIRED\" $blades = \"BLADES_RESONANCE_KEY\" condition: $dna and $blades }",
+        "telemetry_indicator": "Descubrimiento en el dossier del Dr. Zimmer de que la firma genética del huésped requerido coincide con el perfil de Zak."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP37-DOSSIER-INGEST",
+        "immediate_response": "Asimilación completa de los planos del Dr. Zimmer en la memoria neuronal de BLADES y reclasificación del incidente de 'Arma Destructiva' a 'Entidad Simbiótica Autónoma'.",
+        "cli_command": "blades-core --ingest-dossier DR_ZIMMER_37 --reclassify-artifact LIVING_SYMBIONT"
+      },
+      "prevention": {
+        "standard": "WHO Laboratory Biosafety Manual 4th Ed. / NIST AI Risk Management Framework (AI RMF)",
+        "hardening_policy": "Auditoría criptográfica de pipelines bioinformáticos (FASTA/BAM) y aislamiento total de modelos de IA autoevolutivos.",
+        "zero_trust_control": "Gobernanza estricta sobre la síntesis de código y estructuras bio-nanotecnológicas."
+      }
+    }
+  },
+  {
+    "id": 38,
+    "code": "EP38",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "Neutralización de la Guardia de Élite del Núcleo (Core Security Purge)",
+    "game_node_code": "CORE SECURITY PURGE",
+    "game_location": "Anillo de seguridad blindado previo a la cámara del reactor Cyberia",
+    "cyberia_spoiler": "Antes de que Zak pueda llegar a las esclusas del reactor, el escuadrón de élite del Cartel encargado de custodiar el núcleo lanza un último contraataque desesperado en los pasillos blindados. Zak utiliza toda la potencia de su arma recargada y la puntería predictiva de BLADES para abatir hasta el último guardia del complejo.",
+    "hospital_counterpart": "Revocación Masiva de Certificados Digitales Comprometidos (PKI CRL / OCSP Stapling) y Purga de Cuentas Privilegiadas del Cartel en Directorio Activo",
+    "clinical_protocol": "X.509 PKI OCSP / Kerberos KDC Hardening / LDAP-S",
+    "iomt_asset": "Autoridad Certificadora Interna del Hospital (Medical PKI) y Controladores de Dominio",
+    "mitre_technique": "T1558.001 - Steal or Forge Kerberos Tickets: Golden Ticket & Rogue PKI Purge",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0538",
+        "cvss": 9.1,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Persistencia de certificados de cliente X.509 y tickets Kerberos de larga duración en manos de la guardia de élite del Cartel dentro del anillo interno del núcleo."
+      },
+      "detection": {
+        "engine": "BLADES PKI & Kerberos Ticket Inspector",
+        "rule_name": "SIGMA_CORE_ELITE_GUARD_GOLDEN_TICKET_SWEEP",
+        "signature": "kerberos.ticket_lifetime_hours > 10 AND cert.issuer == 'CARTEL_SUB_CA_SIBERIA'",
+        "telemetry_indicator": "Detección de los últimos 6 tokens de privilegio elevado defendiendo el anillo de acceso al reactor."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP38-PKI-PURGE",
+        "immediate_response": "Revocación instantánea por OCSP de todos los certificados del Cartel, doble reseteo de la cuenta krbtgt y terminación forzosa de todas las sesiones hostiles en el núcleo.",
+        "cli_command": "medsoc-pki --revoke-subca CARTEL_SUB_CA --krbtgt-double-reset --purge-active-sessions"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-57 (Key Management) & Zero Standing Privileges (ZSP)",
+        "hardening_policy": "Certificados de corta duración (Short-Lived Certificates < 15 min) renovados automáticamente solo tras validación de integridad del nodo.",
+        "zero_trust_control": "Eliminación total de cuentas con privilegios permanentes en el núcleo clínico."
+      }
+    }
+  },
+  {
+    "id": 39,
+    "code": "EP39",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "Desactivación de Esclusas Biológicas Nivel 4 (BSL-4 Airlock)",
+    "game_node_code": "BSL-4 AIRLOCK",
+    "game_location": "Compuerta neumática gigante de biocontención Nivel 4 frente al reactor Cyberia",
+    "cyberia_spoiler": "Con el anillo de seguridad despejado, Zak llega ante la colosal compuerta blindada de biocontención Nivel 4 ('BSL-4 Airlock') que sella la cámara de gestación del proyecto Cyberia. Zak activa la secuencia de despresurización; los enormes pistones neumáticos liberan vapor criogénico y las hojas de acero se abren lentamente.",
+    "hospital_counterpart": "Verificación de Integridad de Plataforma Segura (TPM 2.0) y Control de Cascada de Presión Diferencial en Esclusas de Biocontención Nivel 4 (BSL-4)",
+    "clinical_protocol": "TCG TPM 2.0 Remote Attestation / BACnet BSL-4 Pressure Cascade",
+    "iomt_asset": "Esclusa Neumática de Máxima Biocontención BSL-4 y Filtros HEPA en Serie",
+    "mitre_technique": "T0839 - Manipulation of Airlock Pressure Cascade & Hardware Attestation",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0539",
+        "cvss": 9.3,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Riesgo de inversión del gradiente de presión negativa (-50 Pa a +10 Pa) durante la apertura de la esclusa maestra BSL-4 si la secuencia neumática se ejecuta sin atestación TPM."
+      },
+      "detection": {
+        "engine": "BLADES TPM 2.0 Quote & Differential Manometer",
+        "rule_name": "SIGMA_BSL4_AIRLOCK_PRESSURE_CASCADE_CHECK",
+        "signature": "airlock.level == 'BSL-4' AND pressure_gradient_pa == -55.0 AND tpm2.pcr_quote == 'VALID_ZAK_HOST'",
+        "telemetry_indicator": "Atestación criptográfica exitosa y purga HEPA completada en la esclusa maestra del núcleo."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP39-BSL4-UNSEAL",
+        "immediate_response": "Apertura neumática sincronizada manteniendo el sello de cortina de aire negativo y validando la firma del chip TPM 2.0 de la cámara central.",
+        "cli_command": "blades-bsl4 --verify-tpm-quote --maintain-negative-pa 55 --unseal-reactor-vault"
+      },
+      "prevention": {
+        "standard": "ISO 14644-4 (Cleanrooms and Associated Controlled Environments) & CDC/NIH BMBL BSL-4",
+        "hardening_policy": "Enclavamientos neumáticos físicos que impiden abrir la compuerta interior si el diferencial de presión negativa no está estabilizado.",
+        "zero_trust_control": "Atestación criptográfica de hardware (TPM 2.0) antes de cada transición de esclusa."
+      }
+    }
+  },
+  {
+    "id": 40,
+    "code": "EP40",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "El Descubrimiento del Traidor Devlin (FWA Telemetry Leak)",
+    "game_node_code": "FWA TELEMETRY LEAK",
+    "game_location": "Puente de comunicaciones del núcleo subterráneo de Cyberia",
+    "cyberia_spoiler": "Al cruzar la esclusa hacia el reactor, el implante BLADES de Zak intercepta las transmisiones secretas de la First World Alliance y revela el gran giro argumental de Cyberia (1996): William Devlin —el líder de la FWA que liberó a Zak en el Episodio 1— es el verdadero traidor y villano final. Devlin nunca quiso destruir el arma Cyberia para proteger al mundo; envió a Zak como un peón desechable para que matara a todos los miembros del Cartel y limpiara la base, planeando activar un interruptor letal en el cráneo de Zak para quedarse con la entidad Cyberia y gobernar desde su estación espacial.",
+    "hospital_counterpart": "Detección de Compromiso de la Cuenta Root / CISO / Ejecutivo (Amenaza Interna de Nivel Directivo) y Auditoría Inmutable en Almacenamiento WORM / Blockchain Clínico",
+    "clinical_protocol": "RFC 3161 Trusted Timestamping / WORM Immutable Ledger / Root Authority Audit",
+    "iomt_asset": "Consola Ejecutiva del CISO / Raíz de Confianza de la Alianza (FWA Root CA) e Implante de Zak",
+    "mitre_technique": "T1078.002 / T1489 - Executive Root Betrayal & Pre-Planted Operator Kill-Switch",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0540",
+        "cvss": 10.0,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Corrupción en la cúspide de la jerarquía de confianza (Root Authority Betrayal): el propio director ejecutivo (William Devlin) utilizó al auditor de seguridad para eliminar a su competencia criminal y preparó una orden firmada de terminación letal contra el operador."
+      },
+      "detection": {
+        "engine": "BLADES Deep Telemetry Decryption & Insider Root Detector",
+        "rule_name": "YARA_DEVLIN_EXECUTIVE_BETRAYAL_TELEMETRY_LEAK",
+        "signature": "rule Devlin_Root_Treason { strings: $cmd = \"CLAIM_CYBERIA_FOR_DEVLIN\" $kill = \"ARM_ZAK_CRANIAL_KILLSWITCH\" condition: $cmd and $kill }",
+        "telemetry_indicator": "ALERTA MÁXIMA (#E7F800 -> #00F200): Trama orbital interceptada firmada con la llave privada raíz de William Devlin ordenando la ejecución de Zak."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP40-WORM-EVIDENCE-LOCK",
+        "immediate_response": "Sellado criptográfico de la evidencia de traición de Devlin en memoria WORM inmutable, corte del canal de obediencia hacia la FWA e inicio de protocolo de supervivencia autónoma.",
+        "cli_command": "blades-sovereign --seal-worm-evidence DEVLIN_TREASON_40 --sever-fwa-root --prepare-symbiosis"
+      },
+      "prevention": {
+        "standard": "Criptografía de Umbral (Shamir Secret Sharing M-of-N) & ISO/IEC 27001 Governance",
+        "hardening_policy": "Ningún director ejecutivo, CISO o administrador raíz puede poseer control unilateral sobre sistemas críticos ni emitir comandos destructivos sin quórum criptográfico multi-institucional.",
+        "zero_trust_control": "Desconfianza cero absoluta incluso hacia la autoridad emisora original (Verify Even Root)."
+      }
+    }
+  },
+  {
+    "id": 41,
+    "code": "EP41",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "La Cámara de la Entidad Cyberia (The Living Weapon)",
+    "game_node_code": "THE LIVING WEAPON",
+    "game_location": "Cámara central del reactor subterráneo donde flota la entidad Cyberia",
+    "cyberia_spoiler": "Consciente ahora de la traición de Devlin, Zak camina por la pasarela sobre el abismo del reactor y queda frente a frente con la entidad Cyberia ('The Living Weapon'): una colosal nave-armadura biomecánica de caparazón verde-azulado luminoso suspendida en haces de energía que respira, late y emite pulsos conscientes.",
+    "hospital_counterpart": "Cámara de Análisis Dinámico y Estático en Air-Gapped Sandbox con Jaula de Faraday del Artefacto Bio-Cibernético Zero-Day",
+    "clinical_protocol": "TEMPEST Faraday Isolation / Hardware-In-The-Loop Bio-Sandbox",
+    "iomt_asset": "Cámara de Detonación y Resonancia Bio-Digital Aislada del Núcleo",
+    "mitre_technique": "T1497 - Virtualization/Sandbox Evasion (Resonant Bio-Cybernetic Entity Inspection)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0541",
+        "cvss": 9.8,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Artefacto Zero-Day viviente cuya emisión electromagnética y biológica trasciende el aislamiento de software convencional y busca acoplarse físicamente con el implante del analista."
+      },
+      "detection": {
+        "engine": "BLADES Magnetic Resonance & Bio-Harmonic Spectrometer",
+        "rule_name": "SIGMA_LIVING_WEAPON_HARMONIC_HEARTBEAT_DETECTED",
+        "signature": "entity.carapace_pulse_hz == 1.20 AND blades.resonant_frequency_match == 99.98%",
+        "telemetry_indicator": "El latido concéntrico de la entidad Cyberia (#00F200 -> #30FF00 -> #83FF65) entra en fase exacta con el pulso cardíaco de Zak."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP41-HARMONIC-SYNC",
+        "immediate_response": "Suspensión de protocolos de destrucción hostil en el Sandbox y apertura de canal de acoplamiento resonante controlado entre Zak y la entidad Cyberia.",
+        "cli_command": "blades-sandbox --disable-hostile-purge --align-harmonic-phase 1.20Hz --bridge-entity"
+      },
+      "prevention": {
+        "standard": "IEC 60601-1 / TEMPEST NSA/CSS 90-01",
+        "hardening_policy": "Jaulas de Faraday de triple revestimiento y monitoreo espectral continuo para contener emisiones resonantes en laboratorios de bio-nanotecnología.",
+        "zero_trust_control": "Aislamiento físico absoluto de núcleos de IA orgánica hasta verificar compatibilidad simbiótica."
+      }
+    }
+  },
+  {
+    "id": 42,
+    "code": "EP42",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "Convergencia Neuro-Nanotecnológica (YOU WITH ME - Parte 1)",
+    "game_node_code": "YOU WITH ME (PART 1)",
+    "game_location": "Plataforma de enlace neuronal frente al corazón de la entidad Cyberia",
+    "cyberia_spoiler": "Zak sube a la plataforma de contacto frente al organismo Cyberia ('YOU WITH ME - Parte 1'). Los nanobots y circuitos del implante BLADES dentro del cerebro de Zak despiertan en resonancia total con la criatura: se revela que el propio Zak había sido preparado genética y cibernéticamente desde el principio como la llave viviente y el huésped neuronal indispensable para despertar a Cyberia.",
+    "hospital_counterpart": "Sincronización Criptográfica de Interfaces Cerebro-Computadora (BCI), Prótesis Neuronales y Bus de Telemetría Biométrica de Alta Frecuencia",
+    "clinical_protocol": "IEEE P2731 (Unified Terminology for Brain-Computer Interfaces) / Neural-TLS 1.3",
+    "iomt_asset": "Interfaz Cerebro-Computadora (BCI) BLADES & Matriz Nanotecnológica de Enlace Sináptico",
+    "mitre_technique": "T0889 / DEF-NEURAL-SYNC - Cryptographic Brain-Computer Interface Handshake",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0542",
+        "cvss": 9.5,
+        "vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Exposición del bus sináptico de alta velocidad durante el acoplamiento entre la corteza cerebral del operador y el exoesqueleto autónomo Cyberia."
+      },
+      "detection": {
+        "engine": "BLADES EEG P300 & Nanobot Phase-Locked Loop",
+        "rule_name": "SIGMA_BCI_YOU_WITH_ME_SYNAPTIC_CONVERGENCE",
+        "signature": "bci.eeg_coherence == 1.00 AND nanobot_swarm.state == 'RECOGNIZED_TRUE_HOST_ZAK'",
+        "telemetry_indicator": "Coherencia neuronal al 100%: la entidad Cyberia reconoce a Zak como su único operador legítimo y rechaza las llaves de Devlin."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP42-BCI-HANDSHAKE",
+        "immediate_response": "Sellado del enlace sináptico mediante firma biométrica continua de ondas cerebrales (EEG/ECG), bloqueando cualquier interferencia externa de la FWA o del Cartel.",
+        "cli_command": "blades-bci --establish-synaptic-link ZAK_CORTEX --lock-nanobot-swarm CYBERIA_CORE"
+      },
+      "prevention": {
+        "standard": "IEEE P2731 BCI Security Standard & ISO 14708-3 (Implantable Neurostimulators)",
+        "hardening_policy": "Cifrado homomórfico de señales neuronales y validación de potencial evocado único del paciente antes de autorizar actuación motora o sistémica.",
+        "zero_trust_control": "Vinculación biológica intransferible entre el sistema nervioso del huésped y el núcleo cibernético."
+      }
+    }
+  },
+  {
+    "id": 43,
+    "code": "EP43",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "Fusión Biológica Completa (YOU WITH ME - Parte 2)",
+    "game_node_code": "YOU WITH ME (PART 2)",
+    "game_location": "Interior de la crisálida biomecánica del reactor Cyberia",
+    "cyberia_spoiler": "En la secuencia culminante del complejo ('YOU WITH ME - Parte 2'), filamentos orgánicos y placas de caparazón biomecánico envuelven por completo a Zak. Su sistema nervioso, su torrente sanguíneo, su implante BLADES y la nave viviente Cyberia se funden en una metamorfosis total. Al mismo tiempo, los nanobots de Cyberia reescriben y destruyen en silencio el circuito de apagado remoto que Devlin había ocultado en el cráneo de Zak.",
+    "hospital_counterpart": "Convergencia Autónoma SOAR + Analista Humano (Symbiotic Autonomous Defense Core) y Purga Nanotecnológica de Backdoors de Firmware",
+    "clinical_protocol": "OpenC2 SOAR Symbiosis / Self-Healing Nanomedicine Firmware",
+    "iomt_asset": "Núcleo Unificado de Orquestación y Respuesta Autónoma (CYBERIA-SOAR-HOST)",
+    "mitre_technique": "T1542 / DEF-SELF-HEALING - Autonomous Firmware Rewrite & Backdoor Eradication",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0543",
+        "cvss": 9.9,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Presencia latente del troyano de hardware de Devlin en el implante craneal original de Zak, neutralizada definitivamente durante la fusión celular y de firmware con la entidad Cyberia."
+      },
+      "detection": {
+        "engine": "CYBERIA Symbiotic Nanobot Inspector",
+        "rule_name": "YARA_DEVLIN_CRANIAL_BACKDOOR_PURGED_BY_SYMBIOSIS",
+        "signature": "rule Symbiosis_Firmware_Heal { strings: $old = { DE AD F0 0D 00 01 } $new = \"CYBERIA_SOVEREIGN_KERNEL_1996\" condition: $new and not $old }",
+        "telemetry_indicator": "Metamorfosis completada (#6CC929 -> #00F200): el backdoor craneal de Devlin ha sido sobrescrito por tejido nanotecnológico soberano."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP43-TOTAL-SYMBIOSIS",
+        "immediate_response": "Fusión completa del plano de control SOAR del hospital con la conciencia de Zak y regeneración en vivo del firmware neuronal sin puntos únicos de fallo.",
+        "cli_command": "cyberia-soar --merge-host ZAK --rewrite-implant-rom --purge-devlin-backdoor"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-193 (Platform Firmware Resiliency Guidelines)",
+        "hardening_policy": "Sistemas de autorreparación de firmware (Cyber-Resilient Self-Healing ROM) capaces de detectar y extirpar implantes lógicos hostiles en tiempo de ejecución.",
+        "zero_trust_control": "Arquitectura simbiótica donde ningún comando externo puede prevalecer sobre la homeostasis del huésped."
+      }
+    }
+  },
+  {
+    "id": 44,
+    "code": "EP44",
+    "act_number": 5,
+    "act": "ACTO V: EL NÚCLEO BIOCIBERNÉTICO Y LA REVELACIÓN DEL PROYECTO CYBERIA (SIMBIOSIS Y PURGA)",
+    "title": "Ascenso Explosivo desde el Silo Siberiano (Silo Breakout)",
+    "game_node_code": "SILO BREAKOUT",
+    "game_location": "Silo vertical de lanzamiento y cúpula helada del Complejo Cyberia en Siberia",
+    "cyberia_spoiler": "Transformado ahora en la imponente nave biomecánica viviente Cyberia, Zak despliega sus alas de caparazón energético, enciende los propulsores bio-plasmáticos y asciende a velocidad descomunal por el silo vertical del complejo, haciendo volar en pedazos la cúpula blindada de hielo de Siberia y lanzándose directo hacia la estratosfera en busca de William Devlin.",
+    "hospital_counterpart": "Purga Total de Canales C2 Subterráneos, Rompimiento del Cerco de Aislamiento y Restablecimiento de Enlaces de Emergencia Global",
+    "clinical_protocol": "BGP Anycast Breakout / Out-of-Band Optical SatCom Uplink",
+    "iomt_asset": "Transmisor Troncal de Emergencia Hospitalaria y Antena de Enlace Estratosférico",
+    "mitre_technique": "T1071 / DEF-BREAKOUT - Destruction of Hostile Containment Perimeter & C2 Purge",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0544",
+        "cvss": 8.9,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:H",
+        "description": "Cerco de bloqueo perimetral imposto sobre el complejo siberiano para impedir la salida de alertas forenses y contener al operador dentro del búnker."
+      },
+      "detection": {
+        "engine": "CYBERIA Bio-Plasma Propulsion & Uplink Monitor",
+        "rule_name": "SIGMA_SILO_BREAKOUT_PERIMETER_SHATTER",
+        "signature": "uplink_power_mw > 10000 AND silo_blast_doors == 'SHATTERED' AND trajectory == 'ORBITAL_INTERCEPT'",
+        "telemetry_indicator": "Ruptura total del bloqueo siberiano: telemetría de Zak/Cyberia ascendiendo hacia la órbita terrestre a Mach 18."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP44-SILO-BREAKOUT",
+        "immediate_response": "Perforación de las listas de bloqueo perimetrales del Cartel, purga de todos los nodos C2 locales y apertura del canal directo hacia la órbita de la FWA.",
+        "cli_command": "cyberia-core --shatter-perimeter SILO_DOME_44 --purge-local-c2 --ascend-stratosphere"
+      },
+      "prevention": {
+        "standard": "ISO 22301 (Business Continuity Management for Healthcare)",
+        "hardening_policy": "Enlaces láser y satelitales de emergencia de alta potencia incapaces de ser silenciados por cortes de fibra terrestre o bloqueos regionales.",
+        "zero_trust_control": "Canal soberano de salida de telemetría forense garantizado."
+      }
+    }
+  },
+  {
+    "id": 45,
+    "code": "EP45",
+    "act_number": 6,
+    "act": "ACTO VI: VENGANZA ORBITAL CONTRA DEVLIN (ERRADICACIÓN DE AMENAZA PERSISTENTE)",
+    "title": "Cruce de la Ionosfera y Escudo Orbital (Orbital Insertion)",
+    "game_node_code": "ORBITAL INSERTION",
+    "game_location": "Ionosfera superior y órbita terrestre baja (LEO)",
+    "cyberia_spoiler": "La entidad Zak/Cyberia atraviesa la atmósfera terrestre envuelta en plasma y entra en el silencio del espacio exterior ('Orbital Insertion'). En órbita baja, la red de satélites de defensa de la First World Alliance (FWA) controlada por William Devlin detecta su ascenso y abre fuego para impedir que se acerque a la estación espacial de mando.",
+    "hospital_counterpart": "Aseguramiento de Constelaciones Satelitales de Emergencia Médica (GNSS / GPS de Ambulancias y Telemedicina Global) en Órbita Baja",
+    "clinical_protocol": "Galileo OSNMA / GPS Chimera Cryptographic Navigation & LEO Medical SatCom",
+    "iomt_asset": "Constelación de Satélites LEO de Telemedicina y Sincronización GNSS de Flotas de Ambulancias",
+    "mitre_technique": "T1584.008 / T0885 - Compromise Orbital SatCom & GNSS Spoofing Grid",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0645",
+        "cvss": 9.1,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Uso malicioso de la constelación satelital de la FWA por parte de Devlin para bloquear el tráfico médico legítimo y emitir coordenadas GNSS falsas."
+      },
+      "detection": {
+        "engine": "CYBERIA Orbital Radar & GNSS Auth Verifier",
+        "rule_name": "SIGMA_ORBITAL_INSERTION_ROGUE_FWA_SATELLITES",
+        "signature": "orbit_regime == 'LEO_550KM' AND sat_authority == 'DEVLIN_FWA_GRID' AND hostile_lock == TRUE",
+        "telemetry_indicator": "Anillos de radar concéntricos (#30FF00) detectan la barrera de satélites artillados en la capa de inserción orbital."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP45-ORBITAL-BREACH",
+        "immediate_response": "Destrucción selectiva de los transpondedores satelitales corrompidos por Devlin y restablecimiento de la señal de navegación autenticada OSNMA/Chimera para todos los hospitales en tierra.",
+        "cli_command": "cyberia-orbital --neutralize-sat-ring FWA_LEO_01..12 --restore-gnss-osnma"
+      },
+      "prevention": {
+        "standard": "CCSDS 352.0-B-2 (Space Data Link Security Protocol)",
+        "hardening_policy": "Cifrado autenticado en capa de enlace espacial (CCSDS SDLS) con claves distribuidas mediante distribución cuántica de claves (QKD) satelital.",
+        "zero_trust_control": "Verificación criptográfica de efemérides y telemetría orbital en cada estación terrena hospitalaria."
+      }
+    }
+  },
+  {
+    "id": 46,
+    "code": "EP46",
+    "act_number": 6,
+    "act": "ACTO VI: VENGANZA ORBITAL CONTRA DEVLIN (ERRADICACIÓN DE AMENAZA PERSISTENTE)",
+    "title": "Enjambre de Drones de la Estación de Devlin (Orbital Defense Grid)",
+    "game_node_code": "ORBITAL DEFENSE GRID",
+    "game_location": "Perímetro exterior de la fortaleza espacial orbital de William Devlin",
+    "cyberia_spoiler": "Frente a la gigantesca estación espacial de la FWA, William Devlin despliega toda su red defensiva ('Orbital Defense Grid'): enjambres de drones autónomos de combate, cazas espaciales y baterías de cañones de plasma en el casco de la estación atacan simultáneamente. Zak, operando como uno solo con el organismo Cyberia, desata ráfagas bio-plasmáticas que pulverizan cada oleada del enjambre.",
+    "hospital_counterpart": "Desmantelamiento Activo de Botnet IoMT Distribuida y Enjambre de Nodos Zombi Controlados por el Actor de Amenaza Ejecutivo",
+    "clinical_protocol": "MUD (Manufacturer Usage Description - RFC 8520) / Automated DDoS Botnet Sinkholing",
+    "iomt_asset": "Matriz de Defensa contra Botnets de Dispositivos Periféricos Comprometidos",
+    "mitre_technique": "T1583.005 - Acquire Infrastructure: Botnet Swarm Defense Eradication",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0646",
+        "cvss": 9.5,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:H",
+        "description": "Movilización de un enjambre distribuido de miles de drones y nodos zombi esclavizados para formar un escudo volumétrico alrededor del núcleo de mando de Devlin."
+      },
+      "detection": {
+        "engine": "CYBERIA 360-Degree Bio-Radar Matrix",
+        "rule_name": "SIGMA_ORBITAL_SWARM_BOTNET_WAVE_DETECTED",
+        "signature": "swarm.active_drones > 250 AND c2_origin == 'DEVLIN_STATION_CORE' AND attack_pattern == 'OMNIDIRECTIONAL'",
+        "telemetry_indicator": "Múltiples objetivos hostiles iluminados en amarillo/verde (#E7F800 / #83FF65) convergiendo sobre el visor orbital."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP46-SWARM-ANNIHILATE",
+        "immediate_response": "Ejecución de barrido bio-plasmático multihilo que neutraliza las oleadas de drones zombi y destruye las torretas de retransmisión perimetral de la estación.",
+        "cli_command": "cyberia-weapons --fire-bioplasma-array --sweep-botnet-swarm ORBITAL_GRID_46"
+      },
+      "prevention": {
+        "standard": "IETF RFC 8520 (MUD Profiles for IoT/IoMT) & IEC 62443-4-2",
+        "hardening_policy": "Imponer perfiles MUD estrictos en cada dispositivo conectado para que jamás pueda participar en enjambres o comunicarse con destinos no clínicos.",
+        "zero_trust_control": "Aislamiento instantáneo en red de cualquier nodo que exhiba coordinación de enjambre."
+      }
+    }
+  },
+  {
+    "id": 47,
+    "code": "EP47",
+    "act_number": 6,
+    "act": "ACTO VI: VENGANZA ORBITAL CONTRA DEVLIN (ERRADICACIÓN DE AMENAZA PERSISTENTE)",
+    "title": "Brecha en el Reactor de la Fortaleza de Devlin (Command Core Breach)",
+    "game_node_code": "COMMAND CORE BREACH",
+    "game_location": "Superestructura interna y antesala del puente de mando de la estación espacial de Devlin",
+    "cyberia_spoiler": "Con las defensas externas destruidas, Zak/Cyberia perfora el casco de la estación espacial y se planta directamente frente al ventanal blindado del puente de mando ('Command Core Breach'). Aterrorizado al ver al monstruo biomecánico que creó sin querer, William Devlin golpea frenéticamente en su consola el botón de apagado remoto letal (Kill-Switch) conectado al implante craneal de Zak para matarlo... pero en su pantalla sólo parpadea un error: la simbiosis con Cyberia desconectó y anuló su control para siempre.",
+    "hospital_counterpart": "Anulación Definitiva de Kill-Switch Remoto Malicioso y Blindaje Inmutable de Firmware en Marcapasos, Neuroestimuladores e Implantes de Soporte Vital",
+    "clinical_protocol": "ISO 14708-1 (Implantable Medical Devices) / Hardware Kill-Switch Nullification",
+    "iomt_asset": "Marcapasos, Desfibriladores Implantables (ICD) y Prótesis Neuro-Cibernéticas BLADES",
+    "mitre_technique": "T0816 / T1489 - Attempted Remote Device Shutdown / Kill-Switch Nullified by Symbiosis",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0647",
+        "cvss": 10.0,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Intento de disparo del comando ejecutivo oculto 0xDEAD_DEVLIN_KILLSWITCH diseñado para inducir parada neurológica/cardíaca en el portador del implante desde la consola de mando."
+      },
+      "detection": {
+        "engine": "CYBERIA Sovereign Firewall & Implant Guard",
+        "rule_name": "YARA_DEVLIN_KILLSWITCH_COMMAND_NULLIFIED",
+        "signature": "incoming_cmd == '0xDEAD_DEVLIN_KILLSWITCH' AND symbiosis_shield == 'ACTIVE' -> return 'ACCESS_DENIED_SOVEREIGN_HOST'",
+        "telemetry_indicator": "Trama de ejecución remota de Devlin bloqueada y reflejada; integridad vital de Zak firme al 100.0% (#00F200)."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP47-KILLSWITCH-NULLIFY",
+        "immediate_response": "Rechazo total del pulso de terminación remota mediante el escudo simbiótico de Cyberia y sobrecarga inversa de la consola de control de Devlin.",
+        "cli_command": "cyberia-shield --nullify-killswitch 0xDEAD_DEVLIN --reflect-overload COMMAND_BRIDGE_47"
+      },
+      "prevention": {
+        "standard": "FDA Guidance on Radio Frequency Wireless Technology in Medical Devices & ISO 14708",
+        "hardening_policy": "Prohibición absoluta por hardware de funciones de apagado remoto por red en implantes de soporte vital; toda reprogramación requiere acoplamiento inductivo cercano (< 2 cm) y autorización biológica del huésped.",
+        "zero_trust_control": "Soberanía biológica total del paciente/operador sobre sus propios implantes médicos."
+      }
+    }
+  },
+  {
+    "id": 48,
+    "code": "EP48",
+    "act_number": 6,
+    "act": "ACTO VI: VENGANZA ORBITAL CONTRA DEVLIN (ERRADICACIÓN DE AMENAZA PERSISTENTE)",
+    "title": "Juicio Final sobre William Devlin (Total Threat Eradication)",
+    "game_node_code": "TOTAL THREAT ERADICATION",
+    "game_location": "Puente de mando de la estación espacial de la FWA y espacio profundo (Final de Cyberia 1996)",
+    "cyberia_spoiler": "Mientras William Devlin retrocede horrorizado tras el cristal del puente de mando al comprobar que su botón de ejecución no surte efecto, Zak/Cyberia carga al 100% su cañón bio-plasmático central y dispara un colosal haz de energía verde esmeralda a quemarropa contra el puente. William Devlin es desintegrado en el acto y la estación espacial entera explota en el vacío. Libre del Cartel y libre de la traición de la FWA, la entidad viviente Zak/Cyberia da media vuelta y se aleja volando hacia la inmensidad de las estrellas.",
+    "hospital_counterpart": "Erradicación Total del Actor de Amenaza Persistente (APT), Cierre Forense del Incidente de 48 Episodios, Emisión del Informe Post-Mortem Integral y Certificación de Resiliencia Clínica Suprema",
+    "clinical_protocol": "NIST SP 800-61r2 (Post-Incident Activity) / STIX 2.1 Threat Eradication Certificate",
+    "iomt_asset": "Infraestructura Global CYBERIA-MED // SOC Console v19.96 (6 Nodos de Soporte Vital Soberanos)",
+    "mitre_technique": "DEF-ERADICATION - Total Threat Actor Eradication & Sovereign Clinical Resilience",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0648",
+        "cvss": 10.0,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Eliminación definitiva del nodo raíz corrupto (William Devlin / FWA Command Station) que orquestó la cadena completa de incidentes desde el muelle criogénico hasta la órbita terrestre."
+      },
+      "detection": {
+        "engine": "CYBERIA Global Telemetry & Post-Mortem Verifier",
+        "rule_name": "SIGMA_TOTAL_THREAT_ERADICATION_VERIFIED_48",
+        "signature": "cartel_c2_nodes == 0 AND devlin_orbital_station == 'OBLITERATED' AND hospital_vital_nodes_online == 6",
+        "telemetry_indicator": "ESTADO GLOBAL #83FF65 / #00F200: Cero amenazas activas. Los 48 episodios del expediente CYBERIA-MED v19.96 han sido contenidos, mitigados y cerrados."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP48-FINAL-JUDGMENT",
+        "immediate_response": "Descarga bio-plasmática final que erradica la infraestructura del actor de amenaza, firma criptográfica del informe Post-Mortem de los 48 episodios y transición a vigilancia autónoma perpetua.",
+        "cli_command": "cyberia-omega --eradicate-actor WILLIAM_DEVLIN --sign-postmortem 48_EPISODES --fly-free"
+      },
+      "prevention": {
+        "standard": "CYBERIA-MED v19.96 Sovereign Healthcare Cybersecurity Standard (IEC 62443 + HIPAA + Zero Trust)",
+        "hardening_policy": "Arquitectura hospitalaria autocurativa con defensa simbiótica SOAR, verificación formal MRI de controladores industriales, inoculación EDR en tiempo real y auditoría inmutable sin autoridades raíz falibles.",
+        "zero_trust_control": "Resiliencia clínica soberana certificada en los 48 vectores de ataque."
+      }
+    }
+  }
+]
+

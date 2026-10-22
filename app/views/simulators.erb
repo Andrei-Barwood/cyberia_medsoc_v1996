@@ -1,0 +1,153 @@
+<main class="simulators-grid">
+  <!-- SIMULADOR 1: EP22 LOCKED OUT (BLADES MRI LOGIC GATE SOLVER) & EP26 GENIUS -->
+  <section class="soc-panel" id="sim-locked-out">
+    <div class="soc-panel-header">
+      <span>SIMULADOR 01 // EP22 "LOCKED OUT" &amp; EP26 "GENIUS"</span>
+      <span class="ep-code-badge">BLADES MRI PLC SOLVER</span>
+    </div>
+    <div class="soc-panel-body">
+      <p style="font-size: 0.8rem; color: var(--hud-glass-outline); margin-bottom: 0.65rem;">
+        <strong>Contexto Cyberia (1996) &amp; Quirófano:</strong> En la puerta trasera del Nivel 1 (<code>LOCKED OUT</code>), Zak usa el escáner MRI de BLADES para ver a través de la pared y conmutar el circuito booleano <code>(A AND NOT B) AND (B OR C)</code> que controla la esclusa quirúrgica de presión positiva.
+      </p>
+
+      <div class="mri-viewport">
+        <div style="font-size: 0.75rem; color: var(--bauble-cyan-bright); font-weight: 700; margin-bottom: 0.4rem;">
+          ESCANEO MRI DE COMPUERTAS LÓGICAS PLC (IEC 61131-3)
+        </div>
+        <div class="logic-switch-row">
+          <button type="button" class="gate-node-btn active-high" id="btn-gate-a" data-state="true">
+            INPUT A: [1 / TRUE]
+          </button>
+          <button type="button" class="gate-node-btn" id="btn-gate-b" data-state="false">
+            INPUT B: [0 / FALSE]
+          </button>
+          <button type="button" class="gate-node-btn active-high" id="btn-gate-c" data-state="true">
+            INPUT C: [1 / TRUE]
+          </button>
+        </div>
+
+        <svg viewBox="0 0 360 115" style="width: 100%; background: var(--iris-bg-deep-2); border: 1px solid var(--carapace-deep-3); margin-bottom: 0.65rem;">
+          <text x="12" y="25" fill="#83FF65" font-size="10">IN_A</text>
+          <text x="12" y="60" fill="#83FF65" font-size="10">IN_B</text>
+          <text x="12" y="95" fill="#83FF65" font-size="10">IN_C</text>
+
+          <rect x="75" y="45" width="46" height="22" fill="#1A566D" stroke="#2B87AB" />
+          <text x="84" y="60" fill="#A4FF8E" font-size="9">NOT B</text>
+
+          <rect x="145" y="18" width="55" height="28" fill="#1A566D" stroke="#29C2DA" />
+          <text x="152" y="35" fill="#A4FF8E" font-size="9">A &amp; !B</text>
+
+          <rect x="145" y="72" width="55" height="28" fill="#1A566D" stroke="#29C2DA" />
+          <text x="155" y="89" fill="#A4FF8E" font-size="9">B | C</text>
+
+          <rect x="235" y="42" width="95" height="32" fill="#0F5150" stroke="#00F200" stroke-width="2" />
+          <text x="243" y="61" fill="#00F200" font-size="9" font-weight="bold">SOLENOID OUT</text>
+        </svg>
+
+        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+          <button type="button" class="soc-btn" id="btn-run-mri-gates">
+            VERIFICAR COMPUERTAS MRI (EP22)
+          </button>
+          <button type="button" class="soc-btn" id="btn-run-genius-defuse">
+            DESACTIVAR BOMBA LÓGICA "GENIUS" (EP26)
+          </button>
+        </div>
+
+        <pre id="mri-gate-output" class="code-terminal" style="margin-top: 0.65rem;">[MRI-GATE-READY] Conmuta las entradas A, B, C y ejecuta el escaneo de resonancia magnética...</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULADOR 2: EP35 GRAFFITI (MRI HYDRAULIC & ECMO VALVE ALIGNER) -->
+  <section class="soc-panel" id="sim-graffiti">
+    <div class="soc-panel-header">
+      <span>SIMULADOR 02 // EP35 "GRAFFITI"</span>
+      <span class="ep-code-badge">MRI ECMO &amp; HYDRAULIC VALVES</span>
+    </div>
+    <div class="soc-panel-body">
+      <p style="font-size: 0.8rem; color: var(--hud-glass-outline); margin-bottom: 0.65rem;">
+        <strong>Contexto Cyberia (1996) &amp; Perfusión ECMO:</strong> Dentro del ascensor bloqueado con grafitis (<code>GRAFFITI</code>), Zak activa el visor MRI para ver a través del muro y abrir las <strong>4 válvulas periféricas</strong> antes de encender la <strong>Bomba Maestra</strong>. En el hospital esto asegura el circuito de Circulación Extracorpórea (ECMO) contra sobrepresión mortal.
+      </p>
+
+      <div class="mri-viewport">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+          <span style="font-size: 0.75rem; color: var(--bauble-cyan-bright); font-weight: 700;">
+            MATRIZ DE 4 VÁLVULAS PERIFÉRICAS + ROTOR CENTRAL
+          </span>
+          <span id="graffiti-mri-badge" class="hud-tag">VISOR MRI: ACTIVO (#249BA7)</span>
+        </div>
+
+        <div class="valve-grid">
+          <button type="button" class="gate-node-btn active-high valve-toggle" data-valve="0" data-open="true">
+            V1 (VENOSA): OPEN
+          </button>
+          <button type="button" class="gate-node-btn active-high valve-toggle" data-valve="1" data-open="true">
+            V2 (OXIGENADOR): OPEN
+          </button>
+          <button type="button" class="gate-node-btn active-high valve-toggle" data-valve="2" data-open="true">
+            V3 (INTERCAMBIADOR): OPEN
+          </button>
+          <button type="button" class="gate-node-btn active-high valve-toggle" data-valve="3" data-open="true">
+            V4 (FILTRO ARTERIAL): OPEN
+          </button>
+        </div>
+
+        <div style="margin-top: 0.65rem; display: flex; gap: 0.5rem;">
+          <button type="button" class="soc-btn" id="btn-engage-main-pump">
+            ENERGIZAR BOMBA MAESTRA CENTRAL (MAIN PUMP)
+          </button>
+        </div>
+
+        <pre id="graffiti-valve-output" class="code-terminal" style="margin-top: 0.65rem;">[MRI-HYDRAULIC-SCAN] 4 válvulas periféricas alineadas. Pulsa ENERGIZAR BOMBA MAESTRA para presurizar el circuito ECMO y el ascensor al Núcleo...</pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIMULADOR 3: EP33 DRUG STORE & EP34 UNSAFE DOOR (NANOMEDICINE EDR INOCULATOR) -->
+  <section class="soc-panel" id="sim-drug-store">
+    <div class="soc-panel-header">
+      <span>SIMULADOR 03 // EP33 "DRUG STORE" &amp; EP34 "UNSAFE DOOR"</span>
+      <span class="ep-code-badge">NANOMED EDR INOCULATOR</span>
+    </div>
+    <div class="soc-panel-body">
+      <p style="font-size: 0.8rem; color: var(--hud-glass-outline); margin-bottom: 0.65rem;">
+        <strong>Contexto Cyberia (1996) &amp; Bombas de Infusión UCI:</strong> En la consola médica <code>DRUG STORE</code>, Zak elige uno de los 3 antídotos experimentales y dispara en tiempo real a través del visor microscópico contra los patógenos virales para obtener el código del <strong>Inoculador</strong> (<code>UNSAFE DOOR</code>).
+      </p>
+
+      <div class="mri-viewport">
+        <div class="filter-controls">
+          <label for="nanomed-compound-select" style="font-size: 0.75rem; color: var(--magic-highlight);">
+            1. SELECCIONA COMPUESTO ANTÍDOTO EXPERIMENTAL (EP33):
+          </label>
+          <select id="nanomed-compound-select" class="soc-select">
+            <option value="ANTIDOTE-01">ANTIDOTE-01 // COMPOUND-ALPHA (Kernel Mutex Vaccine)</option>
+            <option value="ANTIDOTE-02">ANTIDOTE-02 // COMPOUND-BETA (DICOM Buffer Shield)</option>
+            <option value="ANTIDOTE-03">ANTIDOTE-03 // COMPOUND-GAMMA (Neuro-Nanobot Purge)</option>
+          </select>
+        </div>
+
+        <div style="text-align: center; margin: 0.6rem 0;">
+          <div style="font-size: 0.73rem; color: var(--hud-glass-outline); margin-bottom: 0.3rem;">
+            VISOR MICROSCÓPICO DE PATÓGENOS EN MEMORIA KERNEL (HAZ CLIC PARA DISPARAR PULSOS #00F200)
+          </div>
+          <canvas id="nanomed-microscope-canvas" width="320" height="140" style="background: var(--iris-bg-deep-2); border: 1px solid var(--magic-ring); cursor: crosshair; width: 100%; max-width: 340px;"></canvas>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem;">
+          <button type="button" class="soc-btn" id="btn-run-inoculator">
+            SINTETIZAR VACUNA &amp; ACTIVAR INOCULADOR (EP34)
+          </button>
+          <span id="nanomed-vital-badge" class="ep-code-badge">SALUD: 100%</span>
+        </div>
+
+        <div class="horn-progress-track" style="margin-top: 0.5rem;">
+          <div id="nanomed-purge-bar" class="horn-progress-bar" style="width: 100%;"></div>
+        </div>
+
+        <pre id="nanomed-inoculator-output" class="code-terminal" style="margin-top: 0.65rem;">[DRUG-STORE-READY] Haz clic en los patógenos del visor microscópico o pulsa SINTETIZAR VACUNA para purgar el ransomware...</pre>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="/js/simulators_hud.js"></script>

@@ -1,0 +1,792 @@
+/* ==========================================================================
+   CYBERIA-MED // SOC Console v19.96
+   Design System: ULTIMATE QUEEN CHRYSALIS (MLP Vector Club #523)
+   Clinical Telemetry, BLADES MRI Scanner & Life-Support Terminal Stylesheet
+   ========================================================================== */
+
+:root {
+  /* 1. Fondos Clínicos Oscuros (Coat) */
+  --bg-core: #0E1111;
+  --bg-panel: #121312;
+  --bg-surface-shadow: #252525;
+  --bg-surface: #292929;
+  --bg-elevated: #3D3E3D;
+
+  /* 2. Estructura de Ventanas y Navegación (Mane, Tail, Armor & Carapace) */
+  --border-structural: #164E62;
+  --panel-header: #1A566D;
+  --panel-header-border: #2B87AB;
+  --carapace-grad-start: #218984;
+  --carapace-grad-end: #6CC929;
+  --carapace-deep-1: #00485C;
+  --carapace-deep-2: #14747E;
+  --carapace-deep-3: #409979;
+  --bauble-cyan-fill: #218595;
+  --bauble-cyan-bright: #29C2DA;
+
+  /* 3. Alertas Bio-Digitales, Escáner MRI y Telemetría Activa (Magic, Horn & Iris) */
+  --magic-pulse-core: #00F200;
+  --magic-ring: #30FF00;
+  --magic-main: #83FF65;
+  --magic-highlight: #A4FF8E;
+  --horn-grad-start: #5B9E00;
+  --horn-grad-end: #9DE209;
+  --horn-grad: linear-gradient(90deg, #5B9E00 0%, #9DE209 100%);
+  --iris-warning-high: #E7F800;
+  --iris-warning-mid: #AEF504;
+  --iris-bg-deep-1: #00383B;
+  --iris-bg-deep-2: #093534;
+  --iris-bg-deep-3: #0F5150;
+
+  /* 4. Capas Translúcidas / HUD (Wings) */
+  --hud-glass-outline: #B2E5F2;
+  --hud-glass-fill-light: rgba(36, 155, 167, 0.6); /* #249BA7 */
+  --hud-glass-fill-dark: rgba(12, 82, 106, 0.3);  /* #0C526A */
+
+  /* Scrollbar & Native UI Theming (Modern Web Guidance Best Practices) */
+  --scrollbar-thumb: #2B87AB;
+  --scrollbar-track: #121312;
+  color-scheme: dark;
+  accent-color: var(--magic-pulse-core);
+}
+
+/* Selección de texto y barras de desplazamiento estándar */
+::selection {
+  background-color: var(--magic-pulse-core);
+  color: var(--bg-core);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  background-color: var(--bg-core);
+  color: var(--magic-main);
+  font-family: 'Courier New', 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  overflow-x: hidden;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
+}
+
+@supports not (scrollbar-color: auto) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+  }
+  ::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+  }
+}
+
+/* ==========================================================================
+   ANIMACIONES @KEYFRAMES BIO-DIGITALES Y RADAR BLADES
+   ========================================================================== */
+
+@keyframes chrysalis-magic-pulse {
+  0% {
+    box-shadow: 0 0 4px var(--magic-pulse-core), inset 0 0 4px var(--magic-pulse-core);
+    border-color: var(--magic-pulse-core);
+  }
+  33% {
+    box-shadow: 0 0 10px var(--magic-ring), inset 0 0 6px var(--magic-ring);
+    border-color: var(--magic-ring);
+  }
+  66% {
+    box-shadow: 0 0 14px var(--magic-main), inset 0 0 8px var(--magic-main);
+    border-color: var(--magic-highlight);
+  }
+  100% {
+    box-shadow: 0 0 4px var(--magic-pulse-core), inset 0 0 4px var(--magic-pulse-core);
+    border-color: var(--magic-pulse-core);
+  }
+}
+
+@keyframes mri-scanline-sweep {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(1000%);
+  }
+}
+
+@keyframes warning-beacon {
+  0%, 100% {
+    color: var(--iris-warning-high);
+    border-color: var(--iris-warning-high);
+  }
+  50% {
+    color: var(--iris-warning-mid);
+    border-color: var(--panel-header-border);
+  }
+}
+
+/* ==========================================================================
+   OVERLAY CRT / MRI SCANNER
+   ========================================================================== */
+
+.blades-crt-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background:
+    linear-gradient(
+      rgba(12, 82, 106, 0.08) 50%,
+      rgba(14, 17, 17, 0.22) 50%
+    ),
+    radial-gradient(
+      circle at center,
+      transparent 65%,
+      rgba(0, 56, 59, 0.45) 100%
+    );
+  background-size: 100% 4px, 100% 100%;
+}
+
+/* ==========================================================================
+   CABECERA SUPERIOR DE TELEMETRÍA Y SOPORTE VITAL
+   ========================================================================== */
+
+.medsoc-topbar {
+  background: linear-gradient(90deg, var(--carapace-deep-1) 0%, var(--carapace-deep-2) 55%, var(--carapace-deep-3) 100%);
+  border-bottom: 2px solid var(--panel-header-border);
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.75);
+}
+
+.brand-block {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.blades-emblem {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--magic-pulse-core) 0%, var(--iris-bg-deep-1) 75%);
+  border: 2px solid var(--hud-glass-outline);
+  animation: chrysalis-magic-pulse 3s infinite ease-in-out;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  color: var(--bg-core);
+}
+
+.brand-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--magic-highlight);
+  text-shadow: 0 0 8px var(--magic-pulse-core);
+}
+
+.brand-subtitle {
+  font-size: 0.75rem;
+  color: var(--hud-glass-outline);
+  letter-spacing: 0.8px;
+}
+
+.top-nav-links {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  flex-wrap: wrap;
+}
+
+.soc-btn {
+  background-color: var(--panel-header);
+  color: var(--magic-main);
+  border: 1px solid var(--panel-header-border);
+  padding: 0.45rem 0.85rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  text-decoration: none;
+  letter-spacing: 0.8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.soc-btn:hover,
+.soc-btn:focus-visible,
+.soc-btn.active {
+  background: linear-gradient(90deg, var(--carapace-grad-start), var(--carapace-grad-end));
+  color: var(--bg-core);
+  border-color: var(--magic-highlight);
+  box-shadow: 0 0 10px var(--magic-ring);
+}
+
+.soc-btn-warning {
+  background-color: var(--iris-bg-deep-3);
+  border-color: var(--iris-warning-high);
+  color: var(--iris-warning-high);
+}
+
+/* ==========================================================================
+   FRANJA DE SIGNOS VITALES ECG Y 6 INDICADORES AZULES (EP04 SKEET SHOOT)
+   ========================================================================== */
+
+.vitals-ribbon {
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-structural);
+  padding: 0.5rem 1rem;
+  display: grid;
+  grid-template-columns: 260px minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: center;
+  max-width: 100vw;
+}
+
+.ecg-monitor-box {
+  background-color: var(--iris-bg-deep-1);
+  border: 1px solid var(--panel-header-border);
+  padding: 0.35rem 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.episode-location-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  font-size: 0.78rem;
+  margin-top: 0.5rem;
+}
+
+.episode-location-grid > div {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.act-report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 0.35rem;
+  margin-top: 0.2rem;
+}
+
+.ecg-canvas {
+  width: 140px;
+  height: 36px;
+  background-color: var(--iris-bg-deep-2);
+  border: 1px solid var(--iris-bg-deep-3);
+  flex-shrink: 0;
+}
+
+.nodes-six-grid {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.hull-node-pill {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--bauble-cyan-fill);
+  border-left: 3px solid var(--bauble-cyan-bright);
+  padding: 0.25rem 0.45rem;
+  font-size: 0.7rem;
+  min-width: 0;
+}
+
+.hull-node-pill .node-id {
+  color: var(--bauble-cyan-bright);
+  font-weight: 700;
+  display: flex;
+  justify-content: space-between;
+  gap: 0.25rem;
+}
+
+.hull-node-pill .node-name {
+  color: var(--hud-glass-outline);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ==========================================================================
+   GRILLA PRINCIPAL DEL MEDICAL SOC (3 COLUMNAS FLUIDAS SIN DESBORDAMIENTO)
+   ========================================================================== */
+
+.medsoc-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 280px) minmax(0, 1fr) minmax(240px, 285px);
+  gap: 0.85rem;
+  padding: 0.85rem 1rem;
+  width: 100%;
+  max-width: 100vw;
+  align-items: start;
+}
+
+.soc-panel {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-structural);
+  display: flex;
+  flex-direction: column;
+  box-shadow: inset 0 0 20px rgba(0, 56, 59, 0.35);
+  min-width: 0;
+  max-width: 100%;
+}
+
+.soc-panel-header {
+  background-color: var(--panel-header);
+  border-bottom: 1px solid var(--panel-header-border);
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+  font-size: 0.78rem;
+  letter-spacing: 0.8px;
+  color: var(--magic-highlight);
+  text-transform: uppercase;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.soc-panel-body {
+  padding: 0.75rem;
+  flex: 1;
+  overflow-y: auto;
+  min-width: 0;
+  max-width: 100%;
+}
+
+/* ==========================================================================
+   SIDEBAR DE 48 EPISODIOS Y BUSCADOR SIEM
+   ========================================================================== */
+
+.filter-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.soc-input,
+.soc-select {
+  width: 100%;
+  background-color: var(--bg-surface-shadow);
+  color: var(--magic-main);
+  border: 1px solid var(--panel-header-border);
+  padding: 0.45rem 0.6rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+}
+
+.soc-input::placeholder {
+  color: var(--hud-glass-outline);
+  opacity: 0.65;
+}
+
+.soc-input:focus,
+.soc-select:focus {
+  outline: none;
+  border-color: var(--magic-pulse-core);
+  box-shadow: 0 0 8px var(--magic-ring);
+}
+
+.episode-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  max-height: calc(100vh - 310px);
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.episode-card-item {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--bg-elevated);
+  border-left: 3px solid var(--bauble-cyan-fill);
+  padding: 0.55rem 0.65rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+  width: 100%;
+  color: var(--magic-main);
+  font-family: inherit;
+}
+
+.episode-card-item:hover,
+.episode-card-item.active {
+  background-color: var(--iris-bg-deep-2);
+  border-color: var(--magic-ring);
+  border-left: 4px solid var(--magic-pulse-core);
+  box-shadow: 0 0 10px rgba(48, 255, 0, 0.25);
+}
+
+.episode-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  margin-bottom: 0.2rem;
+}
+
+.ep-code-badge {
+  background-color: var(--carapace-deep-1);
+  color: var(--magic-highlight);
+  border: 1px solid var(--panel-header-border);
+  padding: 0.05rem 0.35rem;
+  font-weight: 700;
+}
+
+.ep-node-badge {
+  color: var(--bauble-cyan-bright);
+  font-weight: 700;
+}
+
+.ep-card-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--hud-glass-outline);
+}
+
+/* ==========================================================================
+   VISOR CENTRAL BLADES Y LOS 4 PILARES DE CIBERSEGURIDAD CLÍNICA
+   ========================================================================== */
+
+.blades-hud-banner {
+  background: linear-gradient(135deg, var(--iris-bg-deep-1) 0%, var(--iris-bg-deep-3) 100%);
+  border: 1px solid var(--hud-glass-outline);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.blades-hud-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.hud-tag {
+  background-color: var(--hud-glass-fill-dark);
+  border: 1px solid var(--hud-glass-outline);
+  color: var(--magic-highlight);
+  padding: 0.15rem 0.5rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.hud-tag-warning {
+  border-color: var(--iris-warning-high);
+  color: var(--iris-warning-high);
+}
+
+.spoiler-chronicle-box {
+  background-color: var(--bg-surface-shadow);
+  border: 1px solid var(--panel-header-border);
+  border-left: 4px solid var(--bauble-cyan-bright);
+  padding: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.spoiler-chronicle-box h3 {
+  color: var(--bauble-cyan-bright);
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+}
+
+.pillars-four-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  min-width: 0;
+}
+
+.pillar-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-structural);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.pillar-card h4 {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  color: var(--magic-highlight);
+  border-bottom: 1px solid var(--bg-elevated);
+  padding-bottom: 0.35rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.3rem;
+}
+
+.cvss-pill {
+  background-color: var(--iris-bg-deep-1);
+  color: var(--iris-warning-high);
+  border: 1px solid var(--iris-warning-high);
+  padding: 0.05rem 0.4rem;
+  font-size: 0.72rem;
+}
+
+.code-terminal {
+  background-color: var(--iris-bg-deep-1);
+  border: 1px solid var(--carapace-deep-3);
+  color: var(--magic-main);
+  padding: 0.5rem;
+  font-size: 0.74rem;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+}
+
+.horn-progress-track {
+  width: 100%;
+  height: 10px;
+  background-color: var(--bg-core);
+  border: 1px solid var(--border-structural);
+  overflow: hidden;
+  margin-top: 0.25rem;
+}
+
+.horn-progress-bar {
+  height: 100%;
+  background: var(--horn-grad);
+  width: 100%;
+  transition: width 0.35s ease;
+}
+
+/* ==========================================================================
+   SIMULADORES INTERACTIVOS (EP22 LOCKED OUT, EP35 GRAFFITI, EP33 DRUG STORE)
+   ========================================================================== */
+
+.simulators-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1rem;
+  padding: 1rem;
+  max-width: 100vw;
+}
+
+.mri-viewport {
+  background-color: var(--iris-bg-deep-1);
+  border: 2px solid var(--hud-glass-outline);
+  box-shadow: inset 0 0 30px var(--hud-glass-fill-light);
+  padding: 0.85rem;
+  position: relative;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.logic-switch-row,
+.valve-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0.65rem 0;
+}
+
+.gate-node-btn {
+  background-color: var(--bg-surface);
+  color: var(--hud-glass-outline);
+  border: 1px solid var(--bauble-cyan-fill);
+  padding: 0.45rem 0.75rem;
+  font-family: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.gate-node-btn.active-high {
+  background-color: var(--iris-bg-deep-3);
+  color: var(--magic-pulse-core);
+  border-color: var(--magic-pulse-core);
+  box-shadow: 0 0 10px var(--magic-ring);
+}
+
+/* ==========================================================================
+   SENTINELA NATIVO AEGIS9CYBERBRAINEDR & PIPELINE DE PARCHES EN ORDEN
+   ========================================================================== */
+
+.sentinel-aegis-box {
+  background: linear-gradient(180deg, var(--iris-bg-deep-1) 0%, var(--bg-panel) 100%);
+  border: 2px solid var(--magic-ring);
+  box-shadow: 0 0 16px rgba(0, 242, 0, 0.18);
+  margin-top: 1rem;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.sentinel-status-bar {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--carapace-deep-1);
+  border-bottom: 1px solid var(--panel-header-border);
+  padding: 0.45rem 0.75rem;
+  font-size: 0.73rem;
+  overflow-wrap: anywhere;
+}
+
+.patch-sequence-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.65rem;
+  margin: 0.65rem 0;
+  min-width: 0;
+}
+
+.patch-step-card {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-structural);
+  border-top: 3px solid var(--magic-pulse-core);
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.74rem;
+  min-width: 0;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.patch-order-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 700;
+}
+
+.patch-class-badge {
+  padding: 0.1rem 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  border: 1px solid currentColor;
+  background-color: var(--iris-bg-deep-1);
+  white-space: nowrap;
+}
+
+.patch-ledger-table-wrap {
+  max-height: 210px;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-y: auto;
+  border: 1px solid var(--border-structural);
+  background-color: var(--bg-core);
+  margin-top: 0.5rem;
+}
+
+.patch-ledger-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.72rem;
+  table-layout: fixed;
+}
+
+.patch-ledger-table th {
+  background-color: var(--panel-header);
+  color: var(--magic-highlight);
+  text-align: left;
+  padding: 0.35rem 0.45rem;
+  position: sticky;
+  top: 0;
+  border-bottom: 1px solid var(--panel-header-border);
+  overflow-wrap: anywhere;
+}
+
+.patch-ledger-table td {
+  padding: 0.35rem 0.45rem;
+  border-bottom: 1px solid var(--bg-elevated);
+  color: var(--hud-glass-outline);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.patch-ledger-table tr:hover td {
+  background-color: var(--iris-bg-deep-2);
+}
+
+/* ==========================================================================
+   BREAKPOINTS RESPONSIVOS MULTIPANTALLA (LAPTOP / MONITOR / TABLET)
+   ========================================================================== */
+
+@media (max-width: 1400px) {
+  .medsoc-grid {
+    grid-template-columns: minmax(230px, 265px) minmax(0, 1fr);
+  }
+  /* La tercera columna (Topología y Exportación) pasa abajo a ancho completo en 2 columnas */
+  .medsoc-grid > aside:last-of-type {
+    grid-column: 1 / -1;
+  }
+  .medsoc-grid > aside:last-of-type > .soc-panel-body {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+    gap: 0.85rem;
+    align-items: start;
+  }
+  .nodes-six-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  .vitals-ribbon {
+    grid-template-columns: 1fr;
+  }
+  .medsoc-grid {
+    grid-template-columns: 1fr;
+  }
+  .nodes-six-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .pillars-four-grid,
+  .patch-sequence-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .episode-location-grid {
+    grid-template-columns: 1fr;
+  }
+  .ecg-monitor-box {
+    align-items: stretch;
+    flex-direction: column;
+  }
+  .ecg-canvas {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 165 / 38;
+  }
+}

@@ -1,0 +1,395 @@
+<% ep0 = @initial_episode || @episodes.first %>
+<% v0 = ep0.dig('pillars', 'vulnerability') || {} %>
+<% d0 = ep0.dig('pillars', 'detection') || {} %>
+<% m0 = ep0.dig('pillars', 'mitigation') || {} %>
+<% p0 = ep0.dig('pillars', 'prevention') || {} %>
+
+<main class="medsoc-grid">
+  <!-- COLUMNA IZQUIERDA: SELECTOR DE 6 ACTOS, FILTROS SIEM Y LÍNEA DE TIEMPO DE 48 EPISODIOS -->
+  <aside class="soc-panel" aria-label="Selector de los 48 Episodios">
+    <div class="soc-panel-header">
+      <span>CRÓNICA DE 48 EPISODIOS</span>
+      <span id="episode-counter-badge" class="ep-code-badge"><%= @episodes.size %> / 48</span>
+    </div>
+    <div class="soc-panel-body">
+      <div class="filter-controls">
+        <input
+          type="search"
+          id="soc-search-input"
+          class="soc-input"
+          placeholder="Buscar CVE, HL7, DICOM, SLICEOMATIC, Devlin..."
+          aria-label="Buscar por CVE, protocolo o escena de Cyberia"
+        >
+        <select id="soc-act-select" class="soc-select" aria-label="Filtrar por Acto">
+          <option value="all">TODOS LOS ACTOS (ACTOS I – VI // 48 EP)</option>
+          <option value="1">ACTO I: Plataforma Offshore "The Rig" (EP01–EP12)</option>
+          <option value="2">ACTO II: Ruta Ártica y Túneles (EP13–EP19)</option>
+          <option value="3">ACTO III: Complejo Cyberia Nivel 1 (EP20–EP27)</option>
+          <option value="4">ACTO IV: Complejo Cyberia Nivel 2 (EP28–EP35)</option>
+          <option value="5">ACTO V: Núcleo Biocibernético y Simbiosis (EP36–EP44)</option>
+          <option value="6">ACTO VI: Venganza Orbital contra Devlin (EP45–EP48)</option>
+        </select>
+        <select id="soc-protocol-select" class="soc-select" aria-label="Filtrar por Protocolo Clínico">
+          <option value="all">TODOS LOS PROTOCOLOS CLÍNICOS / OT</option>
+          <option value="HL7">HL7 v2 / FHIR R4</option>
+          <option value="DICOM">DICOM / PACS MRI</option>
+          <option value="11073">IEEE 11073 (Bombas UCI / Desfibriladores)</option>
+          <option value="Modbus">Modbus / PLC Quirófano / Gases</option>
+          <option value="BACnet">BACnet (HVAC / Halón / BSL-4)</option>
+          <option value="CAN">CAN Bus / ARINC / SatCom</option>
+          <option value="TPM">TPM 2.0 / PKI / BCI Neural</option>
+        </select>
+      </div>
+
+      <div class="episode-list" id="soc-episode-list">
+        <% @episodes.each_with_index do |ep, idx| %>
+          <button
+            type="button"
+            class="episode-card-item <%= idx.zero? ? 'active' : '' %>"
+            data-ep-id="<%= ep['id'] %>"
+            data-act="<%= ep['act_number'] %>"
+            data-protocol="<%= ep['clinical_protocol'] %>"
+            data-search="<%= [ep['code'], ep['title'], ep['game_node_code'], ep['hospital_counterpart'], ep['clinical_protocol'], ep.dig('pillars', 'vulnerability', 'cve'), ep['cyberia_spoiler']].join(' ').downcase %>"
+          >
+            <div class="episode-card-top">
+              <span class="ep-code-badge"><%= ep['code'] %></span>
+              <span class="ep-node-badge"><%= ep['game_node_code'] %></span>
+              <span class="cvss-pill">CVSS <%= ep.dig('pillars', 'vulnerability', 'cvss') %></span>
+            </div>
+            <div class="ep-card-title"><%= ep['title'] %></div>
+            <div style="font-size: 0.72rem; color: var(--magic-main); margin-top: 0.15rem;">
+              <%= ep['hospital_counterpart'] %>
+            </div>
+          </button>
+        <% end %>
+      </div>
+    </div>
+  </aside>
+
+  <!-- COLUMNA CENTRAL: VISOR ÓPTICO BLADES, SPOILER DE CYBERIA (1996) Y LOS 4 PILARES CLÍNICOS -->
+  <section class="soc-panel" aria-label="Visor Central de Análisis de Episodio">
+    <div class="soc-panel-header">
+      <span id="viewer-header-title">VISOR BLADES DPI &amp; MRI // <%= ep0['code'] %> — <%= ep0['game_node_code'] %></span>
+      <div style="display: flex; gap: 0.4rem;">
+        <a id="btn-export-md" href="/reports/episode/<%= ep0['id'] %>.md" class="soc-btn" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">
+          BOLETÍN .MD
+        </a>
+        <a id="btn-export-json" href="/reports/episode/<%= ep0['id'] %>.json" class="soc-btn" style="padding: 0.2rem 0.55rem; font-size: 0.72rem;">
+          STIX .JSON
+        </a>
+      </div>
+    </div>
+
+    <div class="soc-panel-body">
+      <!-- Banner Superior del Episodio -->
+      <div class="blades-hud-banner">
+        <div class="blades-hud-meta">
+          <span id="ep-badge-code" class="hud-tag"><%= ep0['code'] %></span>
+          <span id="ep-badge-node" class="hud-tag">NODO JUEGO: <%= ep0['game_node_code'] %></span>
+          <span id="ep-badge-protocol" class="hud-tag">PROTOCOLO: <%= ep0['clinical_protocol'] %></span>
+          <span id="ep-badge-mitre" class="hud-tag hud-tag-warning"><%= ep0['mitre_technique'] %></span>
+        </div>
+        <h2 id="ep-main-title" style="font-size: 1.25rem; color: var(--magic-highlight); margin-bottom: 0.3rem;">
+          <%= ep0['title'] %>
+        </h2>
+        <div id="ep-act-name" style="font-size: 0.78rem; color: var(--bauble-cyan-bright); font-weight: 700; margin-bottom: 0.35rem;">
+          <%= ep0['act'] %>
+        </div>
+        <div class="episode-location-grid">
+          <div style="background: var(--bg-core); padding: 0.45rem 0.6rem; border-left: 3px solid var(--hud-glass-outline);">
+            <strong style="color: var(--hud-glass-outline);">UBICACIÓN CYBERIA (1996):</strong>
+            <div id="ep-game-location"><%= ep0['game_location'] %></div>
+          </div>
+          <div style="background: var(--bg-core); padding: 0.45rem 0.6rem; border-left: 3px solid var(--magic-pulse-core);">
+            <strong style="color: var(--magic-highlight);">CONTRAPARTE SOC HOSPITALARIO:</strong>
+            <div id="ep-hospital-counterpart"><%= ep0['hospital_counterpart'] %></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Crónica y Spoiler Íntegro de Cyberia (1996) -->
+      <article class="spoiler-chronicle-box">
+        <h3>CRÓNICA NARRATIVA &amp; SPOILER EXACTO — CYBERIA (1996)</h3>
+        <p id="ep-spoiler-text" style="color: var(--hud-glass-outline); font-size: 0.86rem; line-height: 1.55;">
+          <%= ep0['cyberia_spoiler'] %>
+        </p>
+        <div style="margin-top: 0.5rem; font-size: 0.76rem; color: var(--bauble-cyan-bright);">
+          <strong>ACTIVO IoMT / BIOMÉDICO COMPROMETIDO:</strong>
+          <span id="ep-iomt-asset" style="color: var(--magic-main);"><%= ep0['iomt_asset'] %></span>
+        </div>
+      </article>
+
+      <!-- MATRIZ DE LOS 4 PILARES DE CIBERSEGURIDAD EN ENTORNOS HOSPITALARIOS -->
+      <div class="pillars-four-grid">
+        <!-- PILAR 1: ANÁLISIS DE VULNERABILIDAD -->
+        <div class="pillar-card">
+          <h4>
+            <span>1. ANÁLISIS DE VULNERABILIDAD</span>
+            <span id="pillar-cve-badge" class="cvss-pill"><%= v0['cve'] %> (CVSS <%= v0['cvss'] %>)</span>
+          </h4>
+          <div style="font-size: 0.74rem; color: var(--bauble-cyan-bright);">
+            Vector: <code id="pillar-cvss-vector"><%= v0['vector'] %></code>
+          </div>
+          <p id="pillar-vuln-desc" style="font-size: 0.82rem; color: var(--hud-glass-outline);">
+            <%= v0['description'] %>
+          </p>
+        </div>
+
+        <!-- PILAR 2: DETECCIÓN (BLADES DPI / SIEM) -->
+        <div class="pillar-card">
+          <h4>
+            <span>2. DETECCIÓN (BLADES DPI / SIEM)</span>
+            <span id="pillar-det-engine" class="ep-code-badge"><%= d0['engine'] %></span>
+          </h4>
+          <div style="font-size: 0.74rem; color: var(--iris-warning-mid);">
+            Regla: <strong id="pillar-det-rule"><%= d0['rule_name'] %></strong>
+          </div>
+          <pre id="pillar-det-sig" class="code-terminal"><%= d0['signature'] %></pre>
+          <div style="font-size: 0.76rem; color: var(--magic-main);">
+            <strong>Telemetría:</strong> <span id="pillar-det-indicator"><%= d0['telemetry_indicator'] %></span>
+          </div>
+        </div>
+
+        <!-- PILAR 3: MITIGACIÓN INMEDIATA -->
+        <div class="pillar-card">
+          <h4>
+            <span>3. MITIGACIÓN CONTENCIÓN ACTIVA</span>
+            <span id="pillar-mit-code" class="ep-code-badge"><%= m0['action_code'] %></span>
+          </h4>
+          <p id="pillar-mit-resp" style="font-size: 0.82rem; color: var(--hud-glass-outline);">
+            <%= m0['immediate_response'] %>
+          </p>
+          <pre id="pillar-mit-cli" class="code-terminal"><%= m0['cli_command'] %></pre>
+          <div class="horn-progress-track" title="Progreso de Mitigación (--horn-grad)">
+            <div id="mitigation-progress-bar" class="horn-progress-bar" style="width: 100%;"></div>
+          </div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.35rem;">
+            <button type="button" id="btn-run-playbook" class="soc-btn" style="font-size: 0.73rem; padding: 0.3rem 0.65rem;">
+              EJECUTAR PLAYBOOK CLI EN CONSOLA
+            </button>
+            <span id="playbook-exec-status" style="font-size: 0.72rem; color: var(--magic-pulse-core);">
+              ESTADO: LISTO
+            </span>
+          </div>
+        </div>
+
+        <!-- PILAR 4: PREVENCIÓN DE INCIDENTES -->
+        <div class="pillar-card">
+          <h4>
+            <span>4. PREVENCIÓN DE INCIDENTES</span>
+            <span id="pillar-prev-std" class="ep-code-badge"><%= p0['standard'] %></span>
+          </h4>
+          <p style="font-size: 0.8rem; color: var(--hud-glass-outline);">
+            <strong style="color: var(--bauble-cyan-bright);">Hardening:</strong>
+            <span id="pillar-prev-hardening"><%= p0['hardening_policy'] %></span>
+          </p>
+          <p style="font-size: 0.8rem; color: var(--magic-main); margin-top: 0.25rem;">
+            <strong style="color: var(--magic-highlight);">Zero Trust:</strong>
+            <span id="pillar-prev-zt"><%= p0['zero_trust_control'] %></span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Terminal de Salida en Vivo del Motor BLADES -->
+      <div class="soc-panel" style="background-color: var(--iris-bg-deep-1); border-color: var(--hud-glass-outline);">
+        <div class="soc-panel-header" style="background-color: var(--carapace-deep-1);">
+          <span>CONSOLA DE EJECUCIÓN BLADES CLI // LIVE TELEMETRY LOG</span>
+          <span style="font-size: 0.72rem; color: var(--magic-pulse-core);">TTY: /dev/blades0</span>
+        </div>
+        <pre id="blades-live-terminal" class="code-terminal" style="min-height: 76px; border: none;">[2027-SOC-INIT] Implante BLADES v19.96 sincronizado. Selecciona cualquiera de los 48 episodios o ejecuta un Playbook de mitigación...</pre>
+      </div>
+
+      <!-- SENTINELA NATIVO AEGIS9CYBERBRAINEDR: DEPURACIÓN EN VIVO Y ORDEN DE DESPLIEGUE DE PARCHES -->
+      <div class="soc-panel sentinel-aegis-box" id="aegis9-sentinel-panel">
+        <div class="soc-panel-header" style="background: linear-gradient(90deg, #00485C, #1A566D, #409979);">
+          <span>SENTINELA ACTIVO // Aegis9CyberbrainEDR (LIVE DEBUGGER &amp; PATCH LEDGER)</span>
+          <div style="display: flex; gap: 0.4rem; flex-wrap: wrap;">
+            <button type="button" id="btn-sentinel-verify-bin" class="soc-btn soc-btn-warning" style="padding: 0.2rem 0.55rem; font-size: 0.7rem;">
+              EJECUTAR BINARIO (--verify-killchain)
+            </button>
+          </div>
+        </div>
+
+        <div class="sentinel-status-bar">
+          <div>
+            <strong style="color: var(--magic-highlight);">BINARIO ACOPLADO:</strong>
+            <code id="sentinel-binary-path" style="color: var(--bauble-cyan-bright);">/Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR</code>
+          </div>
+          <div style="display: flex; gap: 0.85rem;">
+            <span>SENSOR ACTIVO: <strong id="sentinel-active-sensor" style="color: var(--magic-main);">ProstheticSignatureValidator</strong></span>
+            <span>GHOST SYNC: <strong id="sentinel-ghost-score" style="color: var(--magic-pulse-core);">100.0%</strong></span>
+            <span>LEDGER BLOCKS: <strong id="sentinel-ledger-count" style="color: var(--iris-warning-high);">4</strong></span>
+          </div>
+        </div>
+
+        <div class="soc-panel-body">
+          <!-- Traza de depuración en vivo del Sentinela para el episodio actual -->
+          <div style="font-size: 0.76rem; color: var(--bauble-cyan-bright); font-weight: 700; margin-bottom: 0.3rem;">
+            1. TRAZA DE DEPURACIÓN EN VIVO DEL SENTINELA (<span id="sentinel-ep-label">EP01 — CVE-2027-0101</span>):
+          </div>
+          <pre id="sentinel-debug-trace" class="code-terminal" style="min-height: 92px; margin-bottom: 0.75rem;">[AEGIS9-ATTACH] Inicializando acoplamiento con /Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR...</pre>
+
+          <!-- Los 4 Parches Desplegados en Orden para la Vulnerabilidad Actual -->
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.35rem;">
+            <span style="font-size: 0.76rem; color: var(--magic-highlight); font-weight: 700;">
+              2. PARCHES DESPLEGADOS PARA ESTA VULNERABILIDAD (EN ORDEN ESTRICTO DE EJECUCIÓN #1 &rarr; #4):
+            </span>
+            <span style="font-size: 0.72rem; color: var(--hud-glass-outline);">
+              PREVENCIÓN &rarr; DETECCIÓN &rarr; MITIGACIÓN &rarr; INCIDENT RESPONSE
+            </span>
+          </div>
+
+          <div class="patch-sequence-grid" id="sentinel-episode-patches-grid">
+            <!-- Se puebla dinámicamente al depurar cada episodio -->
+          </div>
+
+          <!-- Historial Cronológico Acumulado de Parches a medida que ocurren los episodios -->
+          <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 0.5rem; margin-top: 0.85rem;">
+            <span style="font-size: 0.76rem; color: var(--bauble-cyan-bright); font-weight: 700;">
+              3. REGISTRO CRONOLÓGICO ACUMULADO DE PARCHES DESPLEGADOS (<span id="sentinel-total-patches-badge">0</span> PARCHES SELLADOS EN BLOCKCHAIN):
+            </span>
+            <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+              <button type="button" class="soc-btn patch-filter-btn active" data-cat="all" style="padding: 0.15rem 0.45rem; font-size: 0.68rem;">TODOS</button>
+              <button type="button" class="soc-btn patch-filter-btn" data-cat="PREVENTION" style="padding: 0.15rem 0.45rem; font-size: 0.68rem;">PREVENCIÓN</button>
+              <button type="button" class="soc-btn patch-filter-btn" data-cat="DETECTION" style="padding: 0.15rem 0.45rem; font-size: 0.68rem;">DETECCIÓN</button>
+              <button type="button" class="soc-btn patch-filter-btn" data-cat="MITIGATION" style="padding: 0.15rem 0.45rem; font-size: 0.68rem;">MITIGACIÓN</button>
+              <button type="button" class="soc-btn patch-filter-btn" data-cat="INCIDENT_RESPONSE" style="padding: 0.15rem 0.45rem; font-size: 0.68rem;">INCIDENT RESPONSE</button>
+            </div>
+          </div>
+
+          <div class="patch-ledger-table-wrap">
+            <table class="patch-ledger-table">
+              <thead>
+                <tr>
+                  <th>ORDEN #</th>
+                  <th>EPISODIO</th>
+                  <th>VULNERABILIDAD</th>
+                  <th>ID PARCHE</th>
+                  <th>CLASIFICACIÓN</th>
+                  <th>MÓDULO AEGIS-9 / CONTROL APLICADO</th>
+                  <th>SELLO SHA-256</th>
+                </tr>
+              </thead>
+              <tbody id="sentinel-patch-ledger-tbody">
+                <!-- Se actualiza en tiempo real conforme ocurren los episodios -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COLUMNA DERECHA: TOPOLOGÍA DEL COMPLEJO CYBERIA <-> PISOS DEL HOSPITAL & ACCESO A SIMULADORES -->
+  <aside class="soc-panel" aria-label="Topología Hospitalaria y Telemetría Global">
+    <div class="soc-panel-header">
+      <span>TOPOLOGÍA HOSPITAL / CYBERIA</span>
+      <span class="ep-code-badge">6 SECTORES</span>
+    </div>
+    <div class="soc-panel-body">
+      <div class="mri-viewport" style="margin-bottom: 0.85rem; padding: 0.75rem;">
+        <div style="font-size: 0.74rem; color: var(--hud-glass-outline); margin-bottom: 0.5rem; text-align: center;">
+          MAPA TÁCTICO INTERACTIVO (HAZ CLIC EN UN SECTOR)
+        </div>
+        <svg id="cyberia-topology-svg" viewBox="0 0 280 350" style="width: 100%; height: auto; display: block;">
+          <!-- Líneas de interconexión troncal -->
+          <line x1="140" y1="35" x2="140" y2="315" stroke="#2B87AB" stroke-width="2" stroke-dasharray="4 3" />
+
+          <!-- Sector 6: Órbita Devlin (EP45-EP48) -->
+          <g class="topo-sector-node" data-act="6" style="cursor: pointer;">
+            <rect x="20" y="10" width="240" height="42" rx="4" fill="#00383B" stroke="#29C2DA" stroke-width="1.5" />
+            <circle cx="40" cy="31" r="7" fill="#00F200" />
+            <text x="55" y="27" fill="#A4FF8E" font-size="10" font-weight="bold">ACTO VI: ESTACIÓN ORBITAL DEVLIN</text>
+            <text x="55" y="41" fill="#B2E5F2" font-size="8.5">SatCom GNSS, Botnet Swarm &amp; Kill-Switch (EP45-48)</text>
+          </g>
+
+          <!-- Sector 1: The Rig (EP01-EP12) -->
+          <g class="topo-sector-node" data-act="1" style="cursor: pointer;">
+            <rect x="20" y="66" width="240" height="42" rx="4" fill="#093534" stroke="#83FF65" stroke-width="2" />
+            <circle cx="40" cy="87" r="7" fill="#00F200" />
+            <text x="55" y="83" fill="#A4FF8E" font-size="10" font-weight="bold">ACTO I: THE RIG (OFFSHORE TRIAGE)</text>
+            <text x="55" y="97" fill="#B2E5F2" font-size="8.5">Gia, Santos, SKEET SHOOT, TF-22 Hangar (EP01-12)</text>
+          </g>
+
+          <!-- Sector 2: Ruta Ártica y Túnel (EP13-EP19) -->
+          <g class="topo-sector-node" data-act="2" style="cursor: pointer;">
+            <rect x="20" y="122" width="240" height="42" rx="4" fill="#00383B" stroke="#2B87AB" stroke-width="1.5" />
+            <circle cx="40" cy="143" r="7" fill="#29C2DA" />
+            <text x="55" y="139" fill="#A4FF8E" font-size="10" font-weight="bold">ACTO II: RUTA ÁRTICA &amp; TÚNEL CAN</text>
+            <text x="55" y="153" fill="#B2E5F2" font-size="8.5">Archangel Shield, UNDERGROUND, PIT STOP (EP13-19)</text>
+          </g>
+
+          <!-- Sector 3: Complejo Cyberia Nivel 1 (EP20-EP27) -->
+          <g class="topo-sector-node" data-act="3" style="cursor: pointer;">
+            <rect x="20" y="178" width="240" height="42" rx="4" fill="#00383B" stroke="#2B87AB" stroke-width="1.5" />
+            <circle cx="40" cy="199" r="7" fill="#29C2DA" />
+            <text x="55" y="195" fill="#A4FF8E" font-size="10" font-weight="bold">ACTO III: COMPLEJO NIVEL 1 (HIS/OR)</text>
+            <text x="55" y="209" fill="#B2E5F2" font-size="8.5">LOCKED OUT MRI, SLICEOMATIC, GENIUS (EP20-27)</text>
+          </g>
+
+          <!-- Sector 4: Complejo Cyberia Nivel 2 (EP28-EP35) -->
+          <g class="topo-sector-node" data-act="4" style="cursor: pointer;">
+            <rect x="20" y="234" width="240" height="42" rx="4" fill="#00383B" stroke="#2B87AB" stroke-width="1.5" />
+            <circle cx="40" cy="255" r="7" fill="#E7F800" />
+            <text x="55" y="251" fill="#A4FF8E" font-size="10" font-weight="bold">ACTO IV: NIVEL 2 (HALÓN &amp; NANOMED)</text>
+            <text x="55" y="265" fill="#B2E5F2" font-size="8.5">RED LIGHT, DRUG STORE, UNSAFE DOOR, GRAFFITI (EP28-35)</text>
+          </g>
+
+          <!-- Sector 5: Núcleo Biocibernético BSL-4 (EP36-EP44) -->
+          <g class="topo-sector-node" data-act="5" style="cursor: pointer;">
+            <rect x="20" y="290" width="240" height="46" rx="4" fill="#0F5150" stroke="#30FF00" stroke-width="1.5" />
+            <circle cx="40" cy="313" r="7" fill="#00F200" />
+            <text x="55" y="308" fill="#A4FF8E" font-size="10" font-weight="bold">ACTO V: NÚCLEO BSL-4 &amp; SIMBIOSIS</text>
+            <text x="55" y="322" fill="#B2E5F2" font-size="8.5">Zimmer, Traición Devlin, YOU WITH ME (EP36-44)</text>
+          </g>
+        </svg>
+      </div>
+
+      <!-- Métricas del SOC -->
+      <div class="pillar-card" style="margin-bottom: 0.85rem;">
+        <h4><span>TELEMETRÍA MAESTRA DEL SOC</span></h4>
+        <div style="font-size: 0.78rem; display: grid; gap: 0.35rem;">
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--hud-glass-outline);">Episodios Cargados:</span>
+            <strong style="color: var(--magic-pulse-core);"><%= @metrics[:total_episodes] %> / 48</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--hud-glass-outline);">Severidad CVSS Promedio:</span>
+            <strong style="color: var(--iris-warning-high);"><%= @metrics[:average_cvss] %> / 10.0</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--hud-glass-outline);">CVEs Críticos (&ge; 9.0):</span>
+            <strong style="color: var(--iris-warning-mid);"><%= @metrics[:critical_vulnerabilities] %> Incidentes</strong>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--hud-glass-outline);">Estado Simbiosis:</span>
+            <strong style="color: var(--magic-main);"><%= @metrics[:symbiosis_status] %></strong>
+          </div>
+        </div>
+      </div>
+
+      <!-- Acceso Directo a Simuladores de Puzzles y Dossiers Forenses por Acto -->
+      <div class="pillar-card" style="margin-bottom: 0.85rem;">
+        <h4><span>SIMULADORES INTERACTIVOS MEDSEC</span></h4>
+        <p style="font-size: 0.76rem; color: var(--hud-glass-outline);">
+          Opera los puzzles reales de <em>Cyberia (1996)</em> conectados a diagnósticos PLC de quirófano, válvulas ECMO y vacunas de ransomware:
+        </p>
+        <a href="/simulators" class="soc-btn" style="justify-content: center; margin-top: 0.3rem;">
+          ABRIR LABORATORIO DE SIMULADORES
+        </a>
+      </div>
+
+      <div class="pillar-card">
+        <h4><span>EXPORTAR DOSSIERS FORENSES POR ACTO (.MD)</span></h4>
+        <div class="act-report-grid">
+          <a href="/reports/act/1.md" class="soc-btn" style="justify-content: center; font-size: 0.7rem; padding: 0.3rem;">ACTO I</a>
+          <a href="/reports/act/2.md" class="soc-btn" style="justify-content: center; font-size: 0.7rem; padding: 0.3rem;">ACTO II</a>
+          <a href="/reports/act/3.md" class="soc-btn" style="justify-content: center; font-size: 0.7rem; padding: 0.3rem;">ACTO III</a>
+          <a href="/reports/act/4.md" class="soc-btn" style="justify-content: center; font-size: 0.7rem; padding: 0.3rem;">ACTO IV</a>
+          <a href="/reports/act/5.md" class="soc-btn" style="justify-content: center; font-size: 0.7rem; padding: 0.3rem;">ACTO V</a>
+          <a href="/reports/act/6.md" class="soc-btn" style="justify-content: center; font-size: 0.7rem; padding: 0.3rem;">ACTO VI</a>
+        </div>
+      </div>
+    </div>
+  </aside>
+</main>

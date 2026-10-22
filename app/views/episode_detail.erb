@@ -1,0 +1,61 @@
+<main class="medsoc-grid" style="grid-template-columns: 1fr;">
+  <section class="soc-panel">
+    <div class="soc-panel-header">
+      <span>EXPEDIENTE FORENSE INDIVIDUAL // <%= @episode['code'] %> — <%= @episode['game_node_code'] %></span>
+      <div style="display: flex; gap: 0.5rem;">
+        <a href="/" class="soc-btn" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">&larr; VOLVER A LA CONSOLA DE 48 EPISODIOS</a>
+        <a href="/reports/episode/<%= @episode['id'] %>.md" class="soc-btn" style="padding: 0.25rem 0.6rem; font-size: 0.75rem;">DESCARGAR .MD</a>
+      </div>
+    </div>
+    <div class="soc-panel-body">
+      <div class="blades-hud-banner">
+        <div class="blades-hud-meta">
+          <span class="hud-tag"><%= @episode['code'] %></span>
+          <span class="hud-tag">NODO: <%= @episode['game_node_code'] %></span>
+          <span class="hud-tag">PROTOCOLO: <%= @episode['clinical_protocol'] %></span>
+          <span class="hud-tag hud-tag-warning"><%= @episode['mitre_technique'] %></span>
+        </div>
+        <h1 style="color: var(--magic-highlight); font-size: 1.35rem;"><%= @episode['title'] %></h1>
+        <p style="color: var(--bauble-cyan-bright); font-weight: 700;"><%= @episode['act'] %></p>
+      </div>
+
+      <article class="spoiler-chronicle-box">
+        <h3>SPOILER COMPLETO — CYBERIA (1996) (<%= @episode['game_location'] %>)</h3>
+        <p style="color: var(--hud-glass-outline);"><%= @episode['cyberia_spoiler'] %></p>
+        <p style="margin-top: 0.5rem; color: var(--magic-main);">
+          <strong>Contraparte en el Hospital:</strong> <%= @episode['hospital_counterpart'] %> |
+          <strong>Activo IoMT:</strong> <%= @episode['iomt_asset'] %>
+        </p>
+      </article>
+
+      <% v = @episode.dig('pillars', 'vulnerability') || {} %>
+      <% d = @episode.dig('pillars', 'detection') || {} %>
+      <% m = @episode.dig('pillars', 'mitigation') || {} %>
+      <% p = @episode.dig('pillars', 'prevention') || {} %>
+
+      <div class="pillars-four-grid">
+        <div class="pillar-card">
+          <h4><span>1. ANÁLISIS DE VULNERABILIDAD</span> <span class="cvss-pill"><%= v['cve'] %> (CVSS <%= v['cvss'] %>)</span></h4>
+          <div><code><%= v['vector'] %></code></div>
+          <p><%= v['description'] %></p>
+        </div>
+        <div class="pillar-card">
+          <h4><span>2. DETECCIÓN</span> <span class="ep-code-badge"><%= d['engine'] %></span></h4>
+          <div><strong><%= d['rule_name'] %></strong></div>
+          <pre class="code-terminal"><%= d['signature'] %></pre>
+          <p><%= d['telemetry_indicator'] %></p>
+        </div>
+        <div class="pillar-card">
+          <h4><span>3. MITIGACIÓN</span> <span class="ep-code-badge"><%= m['action_code'] %></span></h4>
+          <p><%= m['immediate_response'] %></p>
+          <pre class="code-terminal"><%= m['cli_command'] %></pre>
+        </div>
+        <div class="pillar-card">
+          <h4><span>4. PREVENCIÓN DE INCIDENTES</span> <span class="ep-code-badge"><%= p['standard'] %></span></h4>
+          <p><strong>Hardening:</strong> <%= p['hardening_policy'] %></p>
+          <p><strong>Zero Trust:</strong> <%= p['zero_trust_control'] %></p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

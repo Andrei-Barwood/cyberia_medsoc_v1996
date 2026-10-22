@@ -1,0 +1,611 @@
+[
+  {
+    "id": 17,
+    "code": "EP17",
+    "act_number": 2,
+    "act": "ACTO II: RUTA DE EVACUACIÓN ÁRTICA Y TÚNELES DE SUMINISTRO (TELEMETRÍA EN TRÁNSITO)",
+    "title": "El Túnel Subterráneo de Carga (UNDERGROUND)",
+    "game_node_code": "UNDERGROUND",
+    "game_location": "Túnel ferroviario y carretero subterráneo bajo los Montes Urales rumbo a Siberia",
+    "cyberia_spoiler": "Tras destruir el generador de escudo verde en Archangel, el caza TF-22 se sumerge dentro de un larguísimo túnel subterráneo de transporte para cruzar hacia Siberia sin ser detectado por los satélites del Cartel. Volando a ras del suelo entre columnas de concreto en un espacio claustrofóbico, Zak debe disparar contra trenes blindados y convoys de camiones cisterna de combustible que bloquean la vía, haciéndolos estallar antes de chocar contra ellos.",
+    "hospital_counterpart": "Protección del Bus Troncal Subterráneo (Hospital Backbone / CAN Bus de Robots AGV y Transporte Neumático)",
+    "clinical_protocol": "ISO 11898 CAN Bus / IEEE 802.1AE MACsec Backbone",
+    "iomt_asset": "Flota de Robots Autónomos de Quirófano (AGVs) y Red de Tubos Neumáticos de Laboratorio",
+    "mitre_technique": "T0814 - Denial of Service on Fieldbus / CAN Bus Dominant Frame Flood",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0217",
+        "cvss": 8.7,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:H",
+        "description": "Inyección de tramas CAN con identificador dominante (0x000) que actúan como camiones cisterna bloqueando el bus de navegación de los robots de suministros quirúrgicos y colapsando el túnel de datos."
+      },
+      "detection": {
+        "engine": "BLADES Subterranean Bus Analyzer",
+        "rule_name": "SIGMA_CANBUS_UNDERGROUND_CONVOY_SATURATION",
+        "signature": "can.arbitration_id == 0x000 AND bus_load_percent > 92 AND collision_error_frames > 100/sec",
+        "telemetry_indicator": "Obstrucción crítica del conducto troncal detectada en el segmento UNDERGROUND por convoy de paquetes hostiles."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP17-TUNNEL-CLEAR",
+        "immediate_response": "Purga activa de tramas parásitas mediante transceptores guardianes en el bus CAN y aislamiento físico de los controladores AGV sabotados.",
+        "cli_command": "blades-canbus --purge-id 0x000 --isolate-rogue-agv CONVOY_01..08 --enable-macsec"
+      },
+      "prevention": {
+        "standard": "ISO 21434 / IEC 62443-3-3",
+        "hardening_policy": "Implementar autenticación criptográfica de mensajes (SecOC) en buses CAN de robótica hospitalaria y enlaces troncales de fibra con cifrado MACsec.",
+        "zero_trust_control": "Validación por hardware de velocidad y prioridad de cada trama en el backbone subterráneo."
+      }
+    }
+  },
+  {
+    "id": 18,
+    "code": "EP18",
+    "act_number": 2,
+    "act": "ACTO II: RUTA DE EVACUACIÓN ÁRTICA Y TÚNELES DE SUMINISTRO (TELEMETRÍA EN TRÁNSITO)",
+    "title": "Parada de Emergencia en el Búnker (PIT STOP)",
+    "game_node_code": "PIT STOP",
+    "game_location": "Caverna búnker de mantenimiento oculta a mitad del túnel subterráneo",
+    "cyberia_spoiler": "Con los escudos del TF-22 seriamente drenados tras las explosiones dentro del túnel, la computadora de a bordo ejecuta un aterrizaje técnico de emergencia ('PIT STOP') en una caverna auxiliar automatizada. Allí, brazos robóticos recargan las celdas de energía del escudo deflector y ejecutan un diagnóstico rápido de los sistemas antes de reanudar el vuelo hacia la salida glaciar.",
+    "hospital_counterpart": "Conmutación por Error (Failover) a Subestación de Generadores Diésel y Bancos de Baterías UPS de Soporte Vital",
+    "clinical_protocol": "SNMPv3 / IEC 61850 Power Substation Automation",
+    "iomt_asset": "Bancos de Baterías UPS Online Doble Conversión de UCI y Generadores Diésel de Emergencia",
+    "mitre_technique": "T0856 - Spoof Reporting Message (Fake UPS Battery Charge Telemetry)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0218",
+        "cvss": 8.3,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:L/I:H/A:H",
+        "description": "Explotación de cadenas de comunidad SNMPv2c por defecto ('private') en las tarjetas de red de los UPS clínicos para reportar 100% de batería mientras las celdas reales están descargadas."
+      },
+      "detection": {
+        "engine": "BLADES Power Impedance & SNMP Auditor",
+        "rule_name": "SIGMA_UPS_PITSTOP_SNMP_SPOOFED_CHARGE",
+        "signature": "snmp.oid == '1.3.6.1.2.1.33.1.2.4' AND reported_charge == 100 AND dc_bus_voltage_v < 195.0",
+        "telemetry_indicator": "Discrepancia detectada durante el PIT STOP entre el voltaje físico del banco de capacitores y la telemetría SNMP."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP18-UPS-RECHARGE",
+        "immediate_response": "Revocación de SNMPv1/v2c, conmutación inmediata al rectificador de respaldo en el búnker intermedio y recarga verificada por impedancia real al 100%.",
+        "cli_command": "medsoc-ups --disable-snmp-v2 --engage-bunker-charger PITSTOP_BAY --verify-dc-bus"
+      },
+      "prevention": {
+        "standard": "NFPA 99 (Health Care Facilities Code - Essential Electrical System)",
+        "hardening_policy": "Monitoreo analógico fuera de banda de tensión e impedancia interna de baterías UPS independiente de la tarjeta de gestión IP.",
+        "zero_trust_control": "Gestión exclusiva mediante SNMPv3 AuthPriv (SHA-512 / AES-256) con listas blancas de origen."
+      }
+    }
+  },
+  {
+    "id": 19,
+    "code": "EP19",
+    "act_number": 2,
+    "act": "ACTO II: RUTA DE EVACUACIÓN ÁRTICA Y TÚNELES DE SUMINISTRO (TELEMETRÍA EN TRÁNSITO)",
+    "title": "Glaciares de Aproximación a Siberia (ICE SCREAM)",
+    "game_node_code": "ICE SCREAM",
+    "game_location": "Salida del túnel hacia los glaciares de Siberia Oriental, perímetro aéreo del Complejo Cyberia",
+    "cyberia_spoiler": "Con los escudos recargados tras el Pit Stop, el TF-22 sale disparado del túnel subterráneo hacia la superficie helada de Siberia. En esta última fase de vuelo ('ICE SCREAM'), Zak atraviesa un cañón glaciar plagado de torretas camufladas en la nieve y escuadrones de élite del Cartel que defienden la aproximación final a la base secreta.",
+    "hospital_counterpart": "Defensa de los Sistemas HVAC de Ultracongelación, Criogenia y Banco de Sangre ante Ataques de Denegación de Servicio Térmico",
+    "clinical_protocol": "BACnet/IP & Modbus TCP Chiller Control",
+    "iomt_asset": "Plantas Enfriadoras (Chillers), Banco de Sangre, Plasma y Cámaras Criogénicas",
+    "mitre_technique": "T0836 - Modify Parameter (Thermal Setpoint Sabotage on Cryo/Blood Bank)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0219",
+        "cvss": 9.0,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:C/C:N/I:H/A:H",
+        "description": "Inyección de comandos BACnet WriteProperty sin autenticar que elevan el punto de consigna térmico de las cámaras del banco de sangre de -40°C a +25°C."
+      },
+      "detection": {
+        "engine": "BLADES Infrared Cryo-Watchdog",
+        "rule_name": "SIGMA_BACNET_ICESCREAM_THERMAL_SABOTAGE",
+        "signature": "bacnet.service == 'WriteProperty' AND object_type == 'AnalogValue_Setpoint' AND new_temp_c > -15.0",
+        "telemetry_indicator": "Intento hostil de deshielo masivo detectado en los controladores glaciares del sector ICE SCREAM."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP19-CRYO-LOCK",
+        "immediate_response": "Bloqueo de registros de consigna en modo solo lectura por hardware y activación de compresores redundantes de nitrógeno líquido.",
+        "cli_command": "blades-hvac --lock-setpoint -40C --drop-bacnet-write --engage-backup-chiller SIBERIA_01"
+      },
+      "prevention": {
+        "standard": "AABB Standards for Blood Banks / IEC 62443-3-3",
+        "hardening_policy": "Termostatos de seguridad bimetálicos independientes de la red IP que mantienen el enfriamiento aun si el PLC principal es comprometido.",
+        "zero_trust_control": "Segmentación física del bus de refrigeración criogénica con inspección profunda de paquetes BACnet."
+      }
+    }
+  },
+  {
+    "id": 20,
+    "code": "EP20",
+    "act_number": 3,
+    "act": "ACTO III: COMPLEJO CYBERIA - NIVEL 1 (PERÍMETRO CLÍNICO, QUIRÓFANOS LÁSER Y ADMISIONES)",
+    "title": "Aterrizaje en la Tundra (COLD FEET)",
+    "game_node_code": "COLD FEET",
+    "game_location": "Explanada nevada exterior frente a las entradas del Complejo Cyberia en Siberia",
+    "cyberia_spoiler": "El TF-22 aterriza en la tundra helada frente al imponente búnker del Complejo Cyberia. Zak desciende de la cabina bajo una tormenta de nieve ('COLD FEET') y debe elegir su vector de infiltración inicial: marchar hacia la puerta principal norte defendida por guardias pesados o rodear el perímetro hacia la puerta trasera de mantenimiento protegida por cerraduras lógicas y trampas láser.",
+    "hospital_counterpart": "Reconocimiento Perimetral y Auditoría de Superficie de Ataque Externa (EASM) en Accesos Físicos y Lógicos del Campus Hospitalario",
+    "clinical_protocol": "TLS 1.3 Ingress / Physical Access Control System (PACS-BMS)",
+    "iomt_asset": "Portal Frontal de Admisiones Clínicas vs. Interfaz Trasera de Diagnóstico Biomédico",
+    "mitre_technique": "T1595 - Active Scanning: Vulnerability Scanning of Perimeter Entry Vectors",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0320",
+        "cvss": 7.6,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:L",
+        "description": "Exposición asimétrica en el perímetro del campus hospitalario: un portal principal sujeto a ataques de fuerza bruta y una puerta lógica de mantenimiento con circuitos internos accesibles por escaneo."
+      },
+      "detection": {
+        "engine": "BLADES Perimeter EASM & Infrared Recon",
+        "rule_name": "SIGMA_PERIMETER_BIFURCATION_RECON_SCAN",
+        "signature": "scan_target IN ('NORTH_MAIN_GATE', 'REAR_MAINT_LOCK') AND ambient_temp_c < -35.0",
+        "telemetry_indicator": "Cartografía completa de los dos vectores de entrada al Nivel 1 generada por el visor de Zak en COLD FEET."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP20-PERIMETER-HARDEN",
+        "immediate_response": "Unificación de políticas de control de acceso en ambos vectores perimetrales y activación de telemetría preventiva antes del cruce de umbral.",
+        "cli_command": "medsoc-easm --audit-entry-vectors NORTH_GATE,REAR_MAINT --enforce-unified-waf"
+      },
+      "prevention": {
+        "standard": "ISO/IEC 27001 A.11 (Seguridad Física y del Entorno) / NIST SP 800-53 PE-3",
+        "hardening_policy": "Eliminar accesos traseros no auditados ('Backdoors' físicos y lógicos) sometiendo toda puerta de mantenimiento al mismo nivel de autenticación que la entrada principal.",
+        "zero_trust_control": "Evaluación de riesgo continua antes de permitir el enrutamiento hacia subredes internas del hospital."
+      }
+    }
+  },
+  {
+    "id": 21,
+    "code": "EP21",
+    "act_number": 3,
+    "act": "ACTO III: COMPLEJO CYBERIA - NIVEL 1 (PERÍMETRO CLÍNICO, QUIRÓFANOS LÁSER Y ADMISIONES)",
+    "title": "Duelo en el Acceso Norte (DOOR MAN)",
+    "game_node_code": "DOOR MAN",
+    "game_location": "Puerta blindada principal Norte del Complejo Cyberia",
+    "cyberia_spoiler": "Si Zak se aproxima a la entrada principal norte ('DOOR MAN'), la compuerta blindada se abre y emerge un soldado centinela con armadura pesada disparando ráfagas letales de plasma. Zak debe cubrirse detrás del pilar exterior de concreto, medir el ritmo de las ráfagas del guardia y asomarse en el instante exacto para abatirlo antes de que la puerta vuelva a cerrarse.",
+    "hospital_counterpart": "Neutralización de Ataques de Fuerza Bruta y Ráfagas de Credential Stuffing en el Concentrador VPN del Personal Médico",
+    "clinical_protocol": "IKEv2/IPSec & SSL-VPN with RADIUS/FIDO2",
+    "iomt_asset": "Concentrador VPN de Teletrabajo Clínico y Portal de Guardia Médica",
+    "mitre_technique": "T1110.004 - Brute Force: Credential Stuffing Burst at Main Gateway",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0321",
+        "cvss": 8.4,
+        "vector": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:L",
+        "description": "Falta de limitación adaptativa de tasa (Rate Limiting) y ausencia de pre-autenticación por certificado en el portal norte de acceso remoto del hospital."
+      },
+      "detection": {
+        "engine": "BLADES Tactical Burst Timing Analyzer",
+        "rule_name": "SIGMA_VPN_DOORMAN_CREDENTIAL_BURST",
+        "signature": "auth_failures_per_sec > 25 AND gateway == 'NORTH_SSL_VPN' AND burst_interval_ms == 1200",
+        "telemetry_indicator": "Detección del patrón cíclico de ráfagas de fuego/autenticación del centinela en el nodo DOOR MAN."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP21-TARPIT-COUNTER",
+        "immediate_response": "Aplicación de TCP Tarpitting sincronizado durante la pausa entre ráfagas y bloqueo definitivo de la fuente atacante mediante contramedida directa.",
+        "cli_command": "blades-vpn --counter-burst NORTH_GATE --enable-mtls-preauth --ban-hostile-sentry"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-63B (Digital Identity Guidelines - AAL3)",
+        "hardening_policy": "Sustituir el acceso VPN tradicional basado en contraseñas por autenticación criptográfica resistente a phishing (FIDO2 / WebAuthn + certificados de dispositivo).",
+        "zero_trust_control": "Single Packet Authorization (SPA) que mantiene el puerto invisible ante cualquier escáner sin semilla criptográfica previa."
+      }
+    }
+  },
+  {
+    "id": 22,
+    "code": "EP22",
+    "act_number": 3,
+    "act": "ACTO III: COMPLEJO CYBERIA - NIVEL 1 (PERÍMETRO CLÍNICO, QUIRÓFANOS LÁSER Y ADMISIONES)",
+    "title": "Compuerta Lógica del Perímetro (LOCKED OUT)",
+    "game_node_code": "LOCKED OUT",
+    "game_location": "Puerta trasera de mantenimiento con cerradura lógica electrónica en el Nivel 1",
+    "cyberia_spoiler": "En la puerta trasera bloqueada ('LOCKED OUT'), Zak activa el escáner de Resonancia Magnética (MRI) de su implante BLADES para ver a través de la placa metálica de la pared. El visor revela un circuito interno de compuertas lógicas (AND, OR, NOT) conectado a tres interruptores de entrada. Zak debe analizar el flujo booleano y conmutar los interruptores en la combinación exacta para energizar el solenoide final y abrir la puerta sin activar la alarma.",
+    "hospital_counterpart": "Auditoría de Firmware por Escaneo MRI y Verificación Formal de Compuertas Lógicas en PLCs de Esclusas de Quirófano (BLADES MRI Gate Solver)",
+    "clinical_protocol": "IEC 61131-3 PLC Ladder Logic / S7comm-Plus",
+    "iomt_asset": "Controlador Lógico Programable (PLC) de Esclusa de Presión Positiva de Quirófano",
+    "mitre_technique": "T0839 / T0833 - Modify Control Logic & Module Firmware in Surgical Airlock PLC",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0322",
+        "cvss": 8.9,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Inversión maliciosa de compuertas booleanas (AND/OR/NOT) en la lógica del PLC de la esclusa quirúrgica que bloquea al personal legítimo o despresuriza el quirófano."
+      },
+      "detection": {
+        "engine": "BLADES MRI Logic Gate Debugger",
+        "rule_name": "YARA_PLC_LOCKED_OUT_BOOLEAN_TAMPER",
+        "signature": "plc.solenoid_out != ((input_a AND (NOT input_b)) AND (input_b OR input_c))",
+        "telemetry_indicator": "El visor MRI (#00383B / #00F200) muestra las pistas de cobre desenergizadas en el solenoide de la esclusa."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP22-MRI-GATE-SOLVE",
+        "immediate_response": "Resolución interactiva en el simulador MRI conmutando los registros de entrada a (A=1, B=0, C=1) para energizar la salida booleana y desbloquear la compuerta.",
+        "cli_command": "blades-mri --scan-plc LOCKED_OUT_01 --set-inputs A=1,B=0,C=1 --verify-solenoid"
+      },
+      "prevention": {
+        "standard": "IEC 61508 SIL-3 / IEC 62443-4-2",
+        "hardening_policy": "Verificación formal matemática de la tabla de verdad del PLC antes de cada cirugía y llave física en posición RUN-ONLY.",
+        "zero_trust_control": "Atestación criptográfica del árbol lógico booleano en cada ciclo de escaneo del controlador."
+      }
+    }
+  },
+  {
+    "id": 23,
+    "code": "EP23",
+    "act_number": 3,
+    "act": "ACTO III: COMPLEJO CYBERIA - NIVEL 1 (PERÍMETRO CLÍNICO, QUIRÓFANOS LÁSER Y ADMISIONES)",
+    "title": "El Cuarto Oscuro y la Trampa Láser (SLICEOMATIC)",
+    "game_node_code": "SLICEOMATIC",
+    "game_location": "Antesala oscura detrás de la puerta de mantenimiento del Nivel 1",
+    "cyberia_spoiler": "Tras resolver el puzzle lógico y entrar por la puerta trasera, Zak queda en una habitación oscura con una puerta interior cerrada. Si el jugador comete el error de tocar el panel de esa cerradura secundaria en la oscuridad, se activa la infame trampa mortal 'SLICEOMATIC': una rejilla de haces láser quirúrgicos de alta potencia cae del techo y rebana el cuerpo de Zak en cubos instantáneamente.",
+    "hospital_counterpart": "Sistemas de Seguridad Intrínseca (Hardwired Interlocks) en Equipos de Radioterapia (LINAC) y Cirugía Láser Robótica",
+    "clinical_protocol": "IEC 60601-2-22 (Surgical Lasers) / DICOM-RT Plan Verification",
+    "iomt_asset": "Robot de Cirugía Láser de Alta Potencia y Acelerador Lineal de Radioterapia",
+    "mitre_technique": "T0879 - Damage to Property / Bypass of Safety Interlocks (Therac-25 Class Hazard)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0323",
+        "cvss": 9.8,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:N/UI:R/S:C/C:N/I:H/A:H",
+        "description": "Sustitución de interbloqueos físicos por rutinas de software manipulables que disparan el arreglo láser quirúrgico a máxima potencia cuando se toca el panel secundario."
+      },
+      "detection": {
+        "engine": "BLADES Infrared & Safety Interlock Monitor",
+        "rule_name": "SIGMA_SLICEOMATIC_UNAUTH_LASER_CAPACITOR_CHARGE",
+        "signature": "laser_array.capacitor_kv > 15.0 AND room_occupancy == TRUE AND surgical_token == 'MISSING'",
+        "telemetry_indicator": "Alerta roja inmediata: capacitores del arreglo láser SLICEOMATIC cargados al 100% sobre el cabezal de la puerta."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP23-INTERLOCK-CUTOFF",
+        "immediate_response": "Abstención de tocar el panel trampa, apertura del interruptor electromecánico de parada de emergencia (Hardwired E-Stop) y descarga segura de los capacitores láser a tierra.",
+        "cli_command": "blades-safety --trip-hardwired-estop SLICEOMATIC_GRID --bleed-capacitors-gnd"
+      },
+      "prevention": {
+        "standard": "IEC 60601-1 / IEC 62304 Class C (Life-Critical Medical Software)",
+        "hardening_policy": "Los interbloqueos que impiden emisiones letales de radiación o láser deben estar cableados en serie por hardware analógico, jamás dependientes solo de software.",
+        "zero_trust_control": "Doble llave física y validación criptográfica de dosimetría antes de energizar cualquier emisor láser."
+      }
+    }
+  },
+  {
+    "id": 24,
+    "code": "EP24",
+    "act_number": 3,
+    "act": "ACTO III: COMPLEJO CYBERIA - NIVEL 1 (PERÍMETRO CLÍNICO, QUIRÓFANOS LÁSER Y ADMISIONES)",
+    "title": "Tiroteo en el Comedor de Guardia (NOT FRIENDS)",
+    "game_node_code": "NOT FRIENDS",
+    "game_location": "Comedor y sala de descanso de guardias en el Nivel 1 del Complejo Cyberia",
+    "cyberia_spoiler": "Zak avanza hacia el comedor de la base ('NOT FRIENDS') donde cuatro guardias del Cartel conversan entre las mesas. Apenas lo ven, desenfundan sus armas. Zak debe ejecutar una secuencia táctica precisa: abatir primero a los dos guardias situados a la izquierda, rodar inmediatamente detrás de las cajas apiladas para esquivar las ráfagas y desde allí eliminar a los dos guardias restantes.",
+    "hospital_counterpart": "Contención en Dos Fases de Brote de Malware Polimórfico en la Red Wi-Fi de Áreas Comunes y Descanso Médico",
+    "clinical_protocol": "WPA3-Enterprise 802.1X / RADIUS CoA (Change of Authorization)",
+    "iomt_asset": "Controlador Inalámbrico WLC de Áreas Comunes y Dispositivos Móviles Clínicos",
+    "mitre_technique": "T1210 - Exploitation of Remote Services (Wireless Worm Propagation in Breakroom)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0324",
+        "cvss": 8.6,
+        "vector": "CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Cuatro nodos infectados en la red Wi-Fi del comedor intentan saltar simultáneamente hacia la VLAN clínica mediante explotación del plano de control inalámbrico."
+      },
+      "detection": {
+        "engine": "BLADES Wireless IDS & Threat Correlator",
+        "rule_name": "SIGMA_NOT_FRIENDS_QUAD_BEACON_AMBUSH",
+        "signature": "wlan.ssid == 'CYBERIA_STAFF_LOUNGE' AND concurrent_hostile_nodes == 4 AND lateral_scan == TRUE",
+        "telemetry_indicator": "Cuatro firmas hostiles activas detectadas en formación cruzada dentro del segmento NOT FRIENDS."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP24-TWO-STAGE-CONTAIN",
+        "immediate_response": "Emisión de paquetes RADIUS CoA de cuarentena inmediata contra el primer par de nodos, activación de escudo ACL tras cobertura y erradicación del segundo par.",
+        "cli_command": "medsoc-wlc --quarantine-pair LEFT_NODES_01_02 --shield-acl --purge-pair RIGHT_NODES_03_04"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-153 (Guidelines for Securing Wireless Local Area Networks)",
+        "hardening_policy": "Aislamiento de clientes inalámbricos (Peer-to-Peer Blocking) y separación física total entre el Wi-Fi de cafetería/descanso y la red de dispositivos médicos.",
+        "zero_trust_control": "Postura de endpoint verificada cada 60 segundos antes de permitir cualquier paquete fuera de la VLAN de invitados."
+      }
+    }
+  },
+  {
+    "id": 25,
+    "code": "EP25",
+    "act_number": 3,
+    "act": "ACTO III: COMPLEJO CYBERIA - NIVEL 1 (PERÍMETRO CLÍNICO, QUIRÓFANOS LÁSER Y ADMISIONES)",
+    "title": "El Holograma del Escritorio y Espionaje (LISTEN IN)",
+    "game_node_code": "LISTEN IN",
+    "game_location": "Oficinas administrativas y despacho de diseño en el Nivel 1 del Complejo Cyberia",
+    "cyberia_spoiler": "Zak entra sigilosamente en las oficinas de investigación del Nivel 1 y examina el proyector holográfico sobre el escritorio, que muestra el modelo tridimensional giratorio de la entidad Cyberia. Al escuchar pasos acercándose por el pasillo, Zak se oculta en las sombras detrás de una columna ('LISTEN IN') y escucha en completo silencio a dos científicos del Cartel discutir sobre el virus letal que se ha liberado abajo y mencionar las pistas de acceso para la supercomputadora de la sala de conferencias.",
+    "hospital_counterpart": "Captura Pasiva de Tráfico (Stealth Network Tap / SPAN Port Mirroring) para Detectar Exfiltración de Modelos 3D DICOM y Credenciales en Texto Claro",
+    "clinical_protocol": "DICOM 3D Reconstruction / Passive Network Tap (SPAN/RSPAN)",
+    "iomt_asset": "Estaciones de Trabajo de Reconstrucción 3D de Imagenología y Sonda NDR Pasiva",
+    "mitre_technique": "T1040 - Network Sniffing (Passive NDR Intelligence Gathering in Clinical LAN)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0325",
+        "cvss": 7.9,
+        "vector": "CVSS:3.1/AV:A/AC:L/PR:N/UI:N/S:U/C:H/I:L/A:N",
+        "description": "Transmisión en texto claro de reconstrucciones holográficas DICOM y conversación administrativa con pistas de la llave maestra sobre segmentos LAN sin cifrado."
+      },
+      "detection": {
+        "engine": "BLADES Acoustic & Passive Network Tap (LISTEN IN Mode)",
+        "rule_name": "YARA_PASSIVE_TAP_HOLOGRAM_AND_CLEARTEXT_CREDS",
+        "signature": "tap.interface_mode == 'PROMISCUOUS_SILENT' AND payload CONTAINS ('GENIUS_TERMINAL_KEY', 'BIO_VIRUS_LEVEL2')",
+        "telemetry_indicator": "Intercepción pasiva exitosa sin emitir un solo paquete ARP: capturadas las coordenadas de la bomba lógica y la alerta biológica del Nivel 2."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP25-STEALTH-INTEL",
+        "immediate_response": "Extracción silenciosa de indicadores de compromiso (IoCs) y semillas de la terminal GENIUS desde el flujo capturado, manteniendo la sonda NDR indetectable.",
+        "cli_command": "blades-ndr --passive-tap OFFICE_VLAN_25 --extract-genius-seed --force-dicom-tls"
+      },
+      "prevention": {
+        "standard": "HIPAA §164.312(e)(1) (Transmission Security) / DICOM TLS Profile",
+        "hardening_policy": "Prohibir cualquier flujo DICOM, HL7 o voz sobre IP clínica sin cifrado TLS 1.3/SRTP mutuo dentro de las subredes administrativas.",
+        "zero_trust_control": "Monitoreo continuo mediante sensores ópticos pasivos (Optical Network Taps) de solo recepción física."
+      }
+    }
+  },
+  {
+    "id": 26,
+    "code": "EP26",
+    "act_number": 3,
+    "act": "ACTO III: COMPLEJO CYBERIA - NIVEL 1 (PERÍMETRO CLÍNICO, QUIRÓFANOS LÁSER Y ADMISIONES)",
+    "title": "Sala de Conferencias y la Terminal de Símbolos (GENIUS)",
+    "game_node_code": "GENIUS",
+    "game_location": "Sala de juntas ejecutiva del Nivel 1, supercomputadora central",
+    "cyberia_spoiler": "Zak entra en la sala de conferencias del Nivel 1, revisa los documentos confidenciales sobre la mesa de juntas y se sienta frente a la terminal maestra. Al intentar desbloquear el montacargas hacia el subsuelo, se activa el sistema de defensa 'GENIUS': un puzzle contrarreloj de 3 niveles con una matriz de símbolos geométricos de colores (flecha azul hacia abajo, círculo rojo partido, cuadrado rojo, triángulo azul). Si el jugador falla o se agota el temporizador, la silla de la terminal electrocuta y mata a Zak en el acto.",
+    "hospital_counterpart": "Desactivación Contrarreloj de Bomba Lógica Criptográfica (Cryptographic Logic Bomb) en el Servidor Maestro de Historias Clínicas (HIS)",
+    "clinical_protocol": "HL7 FHIR R4 / MUMPS- Caché Database Kernel Integrity",
+    "iomt_asset": "Supercomputadora Central de Historias Clínicas (HIS) y Control de Esclusas de Piso",
+    "mitre_technique": "T1485 / T0816 - Data Destruction & Logic Bomb with Fatal Watchdog Timer",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0326",
+        "cvss": 9.5,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Bomba lógica de 3 niveles acoplada al kernel de la base de datos HIS que exige resolver una matriz de transición de estados simbólicos antes de ejecutar el borrado masivo y descarga eléctrica en consola."
+      },
+      "detection": {
+        "engine": "BLADES Symbolic Execution & FSM Solver",
+        "rule_name": "SIGMA_HIS_GENIUS_LOGIC_BOMB_COUNTDOWN",
+        "signature": "his_terminal.challenge == 'GENIUS_3LVL_MATRIX' AND watchdog_remaining_sec < 30 AND chair_capacitor == 'ARMED'",
+        "telemetry_indicator": "Temporizador regresivo crítico en la consola GENIUS; 4 vectores simbólicos requeridos para inhibir el pulso letal."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP26-GENIUS-DEFUSE",
+        "immediate_response": "Resolución asistida por el motor simbólico BLADES inyectando la secuencia exacta (BLUE_ARROW_DOWN -> RED_BROKEN_CIRCLE -> RED_SQUARE -> BLUE_TRIANGLE) en los 3 niveles para desarmar la bomba y liberar el montacargas.",
+        "cli_command": "blades-genius --solve-levels 1..3 --sequence ARROW_B,CIRCLE_R,SQUARE_R,TRI_B --unlock-freight-lift"
+      },
+      "prevention": {
+        "standard": "ISO/IEC 27799 / NIST SP 800-53 SI-7 (Software, Firmware, and Information Integrity)",
+        "hardening_policy": "Monitoreo de integridad de memoria y código en tiempo real (FIM) sobre el motor de base de datos del HIS con aislamiento galvánico en terminales de operador.",
+        "zero_trust_control": "Aprobación criptográfica multiparte sin desafíos destructivos en consolas clínicas."
+      }
+    }
+  },
+  {
+    "id": 27,
+    "code": "EP27",
+    "act_number": 3,
+    "act": "ACTO III: COMPLEJO CYBERIA - NIVEL 1 (PERÍMETRO CLÍNICO, QUIRÓFANOS LÁSER Y ADMISIONES)",
+    "title": "Desbloqueo del Montacargas al Subsuelo (Crate Override)",
+    "game_node_code": "CRATE OVERRIDE",
+    "game_location": "Corredor de almacén del Nivel 1 frente al montacargas oculto tras la caja pesada",
+    "cyberia_spoiler": "Con los cerrojos electrónicos liberados desde la supercomputadora GENIUS, Zak regresa al corredor de carga del Nivel 1, empuja con todas sus fuerzas la enorme caja de suministros que bloqueaba físicamente el acceso oculto, abre la compuerta metálica y aborda el montacargas industrial para descender hacia los laboratorios de biocontención del Nivel 2.",
+    "hospital_counterpart": "Desbloqueo de Rutas Verticales de Evacuación Clínica y Rehabilitación del Bus de Control de Montacargas de Suministros Estériles",
+    "clinical_protocol": "OPC-UA / CANopen Lift Control & WMS (Warehouse Management System)",
+    "iomt_asset": "Montacargas Blindado de Suministros Quirúrgicos y Compuerta de Transferencia Nivel 1-2",
+    "mitre_technique": "T0828 / T0814 - Physical-Logical Obstruction of Critical Vertical Transport",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0327",
+        "cvss": 7.4,
+        "vector": "CVSS:3.1/AV:P/AC:L/PR:L/UI:N/S:U/C:L/I:H/A:H",
+        "description": "Bloqueo combinado físico (contenedor pesado posicionado frente al sensor óptico) y lógico en el controlador CANopen del montacargas que impide el acceso al subsuelo de biocontención."
+      },
+      "detection": {
+        "engine": "BLADES Lidar & CANopen Bus Monitor",
+        "rule_name": "SIGMA_FREIGHT_ELEVATOR_PHYSICAL_LOGICAL_BLOCK",
+        "signature": "lift.electronic_lock == 'UNLOCKED_BY_GENIUS' AND optical_obstruction_sensor == 'BLOCKED_BY_CRATE'",
+        "telemetry_indicator": "El visor de Zak detecta la compuerta desbloqueada detrás del contenedor físico en el nodo CRATE OVERRIDE."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP27-LIFT-DESCEND",
+        "immediate_response": "Desplazamiento del obstáculo físico, recalibración del sensor óptico de umbral y ejecución del descenso seguro hacia los laboratorios del Nivel 2.",
+        "cli_command": "blades-lift --override-obstruction CRATE_01 --engage-descent LEVEL_02_BIOLAB"
+      },
+      "prevention": {
+        "standard": "NFPA 101 (Life Safety Code for Healthcare Occupancies)",
+        "hardening_policy": "Sensores de despeje perimetral con alarma inmediata en el SOC ante cualquier obstrucción física o lógica de rutas verticales de emergencia.",
+        "zero_trust_control": "Verificación cruzada entre la autorización de la terminal central y los sensores físicos de esclusa."
+      }
+    }
+  },
+  {
+    "id": 28,
+    "code": "EP28",
+    "act_number": 4,
+    "act": "ACTO IV: COMPLEJO CYBERIA - NIVEL 2 (LABORATORIOS DE BIOCONTENCIÓN, GAS HALÓN Y NANOMEDICINA)",
+    "title": "El Guardia del Ventanal y el Gas Halón (RED LIGHT)",
+    "game_node_code": "RED LIGHT",
+    "game_location": "Almacén de entrada del Nivel 2 vigilado desde el ventanal de observación",
+    "cyberia_spoiler": "Al abrirse el montacargas en el Nivel 2, Zak debe cruzar un almacén vigilado a través de un gran ventanal de cristal por un investigador/guardia del Cartel. El guardia baja la cabeza cada pocos segundos para anotar en su portapapeles y luego vuelve a levantar la vista. Si Zak da un solo paso mientras el guardia mira hacia el almacén, se enciende la alarma roja ('RED LIGHT'), las puertas se bloquean y los conductos descargan gas Halón letal de extinción de incendios, asfixiando a Zak hasta la muerte.",
+    "hospital_counterpart": "Seguridad en Sistemas SCADA de Supresión de Incendios por Gas Halón/FM-200 y Control de Gases Medicinales en Salas Críticas",
+    "clinical_protocol": "Modbus/TCP & BACnet Fire Suppression / Medical Gas SCADA",
+    "iomt_asset": "Banco de Cilindros de Gas Halón/FM-200, Electroválvulas de Descarga y Sensores de Oxígeno Ambiental",
+    "mitre_technique": "T0831 / T0879 - Manipulation of Control: Lethal Halon Gas Discharge in Occupied Room",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0428",
+        "cvss": 9.7,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:N/I:H/A:H",
+        "description": "Ausencia de retardo mecánico de evacuación y bypass de sensores de presencia humana en el controlador SCADA de extinción por gas Halón, permitiendo asfixiar al personal dentro de la sala sellada."
+      },
+      "detection": {
+        "engine": "BLADES Polling-Cycle Timing & Gas Valve Monitor",
+        "rule_name": "SIGMA_SCADA_RED_LIGHT_HALON_ASPHYXIATION_TRAP",
+        "signature": "halon_solenoid.armed == TRUE AND observer_window.polling_state == 'LOOKING_UP' AND room_o2_percent < 19.5",
+        "telemetry_indicator": "Ciclo de observación del guardia medido en 3.2 s; válvula de descarga Halón lista para inundar la cámara ante cualquier movimiento fuera de ventana."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP28-HALON-INHIBIT",
+        "immediate_response": "Sincronización estroboscópica del tránsito de paquetes/movimiento con los ciclos ciegos del observador e inyección de bloqueo lógico en la electroválvula maestra de Halón.",
+        "cli_command": "blades-scada --sync-blind-window 3200ms --lock-solenoid HALON_VALVE_LVL2 --maintain-o2 21%"
+      },
+      "prevention": {
+        "standard": "NFPA 2001 (Clean Agent Fire Extinguishing Systems) & HTM 02-01 (Medical Gas Pipeline Systems)",
+        "hardening_policy": "Incluir obligatoriamente válvulas mecánicas de bloqueo manual (Mechanical Lockout) y sensores duales de ocupación infrarroja/radar que impidan físicamente la descarga letal con personas dentro.",
+        "zero_trust_control": "Aislamiento físico del bucle de seguridad de gases respecto a consolas de vigilancia manual."
+      }
+    }
+  },
+  {
+    "id": 29,
+    "code": "EP29",
+    "act_number": 4,
+    "act": "ACTO IV: COMPLEJO CYBERIA - NIVEL 2 (LABORATORIOS DE BIOCONTENCIÓN, GAS HALÓN Y NANOMEDICINA)",
+    "title": "Ejecución en el Laboratorio de Observación (Glass Room Breach)",
+    "game_node_code": "GLASS ROOM BREACH",
+    "game_location": "Cabina de observación acristalada del Nivel 2",
+    "cyberia_spoiler": "Tras cruzar el almacén sin disparar la trampa de gas Halón, Zak avanza por el pasillo lateral, abre sigilosamente la puerta de la cabina de observación donde está el guardia del ventanal, se esconde detrás de un armario metálico justo cuando el guardia se voltea al oír la puerta y luego sale de su escondite para abatirlo antes de que pueda activar la alarma general.",
+    "hospital_counterpart": "Neutralización de Sesión Fantasma de Atacante (Session Hijacking / Rogue Operator) en la Consola Central de Monitoreo UCI",
+    "clinical_protocol": "SSHv2 / RDP Clinical Console Session Management",
+    "iomt_asset": "Estación Central de Monitoreo de Enfermería UCI y Panel de Alarma Química",
+    "mitre_technique": "T1563 - Remote Service Session Hijacking (Neutralizing Rogue Watcher Daemon)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0429",
+        "cvss": 8.5,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:H",
+        "description": "Proceso vigilante hostil con privilegios de operador de planta ejecutándose en la estación de la cabina acristalada con acceso directo al disparador de emergencia química."
+      },
+      "detection": {
+        "engine": "BLADES Process Tree & Presence Sensor",
+        "rule_name": "SIGMA_GLASS_ROOM_ROGUE_WATCHER_PROCESS",
+        "signature": "proc.name == 'halon_watcher_d' AND tty == 'pts/2_glass_room' AND privilege_level == 'SCADA_OPERATOR'",
+        "telemetry_indicator": "Detección del proceso observador hostil girando su foco de inspección hacia el puerto de entrada lateral."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP29-KILL-WATCHER",
+        "immediate_response": "Ocultación de firma en tabla de procesos seguida de terminación instantánea (SIGKILL -9) del demonio vigilante antes de que emita el trap de bloqueo.",
+        "cli_command": "blades-edr --cloak-pid --kill-rogue-session GLASS_ROOM_OP_29 --revoke-scada-token"
+      },
+      "prevention": {
+        "standard": "IEC 62443-3-3 SR 2.1 (Authorization Enforcement)",
+        "hardening_policy": "Desacoplar las estaciones de visualización clínica respecto a los controles de disparo de sistemas químicos y exigir confirmación biométrica dual.",
+        "zero_trust_control": "Revocación instantánea de sesiones de consola ante anomalías de proximidad."
+      }
+    }
+  },
+  {
+    "id": 30,
+    "code": "EP30",
+    "act_number": 4,
+    "act": "ACTO IV: COMPLEJO CYBERIA - NIVEL 2 (LABORATORIOS DE BIOCONTENCIÓN, GAS HALÓN Y NANOMEDICINA)",
+    "title": "Terminal V-Mail y Estado de Pacientes (Patient Status Terminal)",
+    "game_node_code": "PATIENT STATUS TERMINAL",
+    "game_location": "Laboratorio de registros médicos y terminal V-Mail contigua a la cabina del Nivel 2",
+    "cyberia_spoiler": "Con el guardia del ventanal eliminado, Zak accede libremente a la computadora del laboratorio ('Patient Status Terminal'). Allí lee los mensajes de correo internos (V-Mail) de los científicos del Cartel, examina los expedientes clínicos de los sujetos infectados por la cepa viral que escapó en el complejo y ejecuta el comando de mantenimiento que destraba las rejillas de los conductos de ventilación.",
+    "hospital_counterpart": "Auditoría Forense de Logs de Acceso a Datos Sensibles de Pacientes (Cumplimiento HIPAA / AuditEvent FHIR) y Control de Compuertas HVAC",
+    "clinical_protocol": "HL7 FHIR R4 AuditEvent / ATNA (Audit Trail and Node Authentication) / BACnet HVAC",
+    "iomt_asset": "Terminal de Historias Clínicas de Infectología, Servidor V-Mail y Actuadores de Rejillas HVAC",
+    "mitre_technique": "T1213 / T1005 - Data from Information Repositories (Clinical EHR & V-Mail Forensics)",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0430",
+        "cvss": 8.8,
+        "vector": "CVSS:3.1/AV:L/AC:L/PR:L/UI:N/S:C/C:H/I:H/A:L",
+        "description": "Convergencia insegura IT/OT en una misma terminal que almacena registros clínicos de pacientes infectados (PHI), correos internos V-Mail y controles directos de las rejillas de ventilación biocontenida."
+      },
+      "detection": {
+        "engine": "BLADES ATNA Forensic Log Collector",
+        "rule_name": "SIGMA_FHIR_PATIENT_STATUS_AND_HVAC_GRATE_UNLOCK",
+        "signature": "fhir.resource == 'Patient_Bioweapon_Status' AND vmail.read == TRUE AND hvac.vent_latch == 'UNLOCKED'",
+        "telemetry_indicator": "Extracción forense de 14 registros clínicos de infección viral y activación del solenoide de la rejilla de ventilación."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP30-ATNA-EXPORT",
+        "immediate_response": "Volcado forense con sello criptográfico de los buzones V-Mail y fichas clínicas para evidencia HIPAA, habilitando el paso controlado por el ducto de aire.",
+        "cli_command": "blades-forensics --export-vmail --dump-fhir-patients LEVEL2 --unlock-hvac-grate SHAFT_31"
+      },
+      "prevention": {
+        "standard": "HIPAA §164.312(b) (Audit Controls) / IHE ATNA Profile",
+        "hardening_policy": "Aislar estrictamente las terminales de consulta de Historias Clínicas Electrónicas (IT) de cualquier controlador de ventilación y rejillas físicas de laboratorio (OT).",
+        "zero_trust_control": "Registro inmutable en servidor syslog remoto (ATNA TLS) de cada visualización de datos de pacientes."
+      }
+    }
+  },
+  {
+    "id": 31,
+    "code": "EP31",
+    "act_number": 4,
+    "act": "ACTO IV: COMPLEJO CYBERIA - NIVEL 2 (LABORATORIOS DE BIOCONTENCIÓN, GAS HALÓN Y NANOMEDICINA)",
+    "title": "Infiltración por los Conductos de Aire (Ventilation Shaft Keycard)",
+    "game_node_code": "VENTILATION SHAFT KEYCARD",
+    "game_location": "Conductos de ventilación entre la sala del ascensor y el despacho cerrado del Nivel 2",
+    "cyberia_spoiler": "Tras haber desbloqueado los pestillos desde la terminal de pacientes, Zak vuelve a la sala del ascensor, retira la rejilla metálica inferior del conducto de ventilación, se arrastra por el estrecho túnel de aire hasta la habitación contigua cerrada con llave y estira el brazo a través de la rejilla abierta para apoderarse de la tarjeta magnética de alta seguridad (Keycard).",
+    "hospital_counterpart": "Prevención de Salto de Redes Aisladas (Air-Gap Bypass) y Custodia de Tarjetas Inteligentes Criptográficas (PIV / SmartCards) del Personal Clínico",
+    "clinical_protocol": "ISO/IEC 14443 Type A/B SmartCard / PKI PIV Authentication",
+    "iomt_asset": "Tarjetas Criptográficas de Acceso a Biocontención y Sensores Volumétricos de Ductos HVAC",
+    "mitre_technique": "T0886 / T1091 - Air-Gap Bypass via Secondary Physical/Environmental Conduit",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0431",
+        "cvss": 8.4,
+        "vector": "CVSS:3.1/AV:P/AC:L/PR:N/UI:N/S:C/C:H/I:H/A:L",
+        "description": "Puente físico secundario no blindado (conducto HVAC compartido entre zona pública de ascensor y sala segura) que permite eludir la puerta blindada y capturar una SmartCard privilegiada desatendida."
+      },
+      "detection": {
+        "engine": "BLADES Laminar Flow & RFID Proximity Sensor",
+        "rule_name": "SIGMA_HVAC_DUCT_AIRGAP_BYPASS_KEYCARD_CLAIM",
+        "signature": "hvac_duct.pressure_drop_pa > 18.0 AND smartcard.uid == '0x4F99A2C1_LEVEL2_MASTER' AND door_state == 'CLOSED'",
+        "telemetry_indicator": "Perturbación de flujo laminar en el ducto de aire y lectura inductiva de la tarjeta maestra por el guante de Zak."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP31-SMARTCARD-BIND",
+        "immediate_response": "Clonación autorizada del certificado X.509 de la tarjeta magnética en el enclave seguro del implante BLADES para franquear el sector rojo.",
+        "cli_command": "blades-pki --import-smartcard 0x4F99A2C1 --bind-enclave ZAK_BLADES --seal-duct-grate"
+      },
+      "prevention": {
+        "standard": "FIPS 201-3 (Personal Identity Verification - PIV) / CDC BMBL 6th Ed.",
+        "hardening_policy": "Instalar barrotes láser y mallas de fibra óptica anti-intrusión dentro de todo conducto HVAC que cruce perímetros de seguridad y exigir PIN biométrico junto con la tarjeta.",
+        "zero_trust_control": "Las tarjetas inteligentes sin presencia biométrica verificada del titular carecen de privilegios de apertura."
+      }
+    }
+  },
+  {
+    "id": 32,
+    "code": "EP32",
+    "act_number": 4,
+    "act": "ACTO IV: COMPLEJO CYBERIA - NIVEL 2 (LABORATORIOS DE BIOCONTENCIÓN, GAS HALÓN Y NANOMEDICINA)",
+    "title": "El Pasillo Rojo y la Sala Plateada (Silver Room Perimeter)",
+    "game_node_code": "SILVER ROOM PERIMETER",
+    "game_location": "Corredor de bioseguridad iluminado en rojo y cámara plateada trampa del Nivel 2",
+    "cyberia_spoiler": "Usando la tarjeta magnética recién obtenida, Zak abre las puertas hacia el corredor interior bañado en luz roja de emergencia y abate a los guardias de bioseguridad. En este sector se encuentra la misteriosa 'Sala Plateada' ('Silver Room'); si el jugador entra en esa habitación metálica sin rumbo o antes de tiempo, descubre que es un callejón sin salida diseñado como trampa de contención.",
+    "hospital_counterpart": "Despliegue de Honeypots Clínicos de Alta Interacción (Cámaras y Servidores PACS/FHIR Señuelo) para Atraer y Encerrar Intrusos",
+    "clinical_protocol": "Deception SDN / Decoy DICOM & HL7 Honeypot Mesh",
+    "iomt_asset": "Clúster Honeypot Clínico 'Silver Room' (Emulador de Servidores PACS y Bombas de Infusión Señuelo)",
+    "mitre_technique": "T1595 / DEF-DECEPTION - High-Interaction Clinical Honeypot Containment",
+    "pillars": {
+      "vulnerability": {
+        "cve": "CVE-2027-0432",
+        "cvss": 7.8,
+        "vector": "CVSS:3.1/AV:A/AC:L/PR:L/UI:N/S:C/C:H/I:L/A:H",
+        "description": "Segmento de red señuelo de alta fidelidad (la Sala Plateada) que emula activos biomédicos jugosos pero encierra en una jaula lógica sin salida cualquier proceso que ingrese en él."
+      },
+      "detection": {
+        "engine": "BLADES Deception Topology Mapper",
+        "rule_name": "SIGMA_SILVER_ROOM_HONEYPOT_TRAP_TRIGGER",
+        "signature": "dest_subnet == '10.22.99.0/24_SILVER_ROOM' AND synthetic_patient_watermark == 'DECOY_CYBERIA_32'",
+        "telemetry_indicator": "El visor BLADES marca la Sala Plateada como nodo señuelo sin salida y desvía hacia allí los hilos hostiles de los guardias del corredor rojo."
+      },
+      "mitigation": {
+        "action_code": "MIT-EP32-HONEYPOT-DIVERT",
+        "immediate_response": "Evasión de la subred trampa por parte del operador Zak y redirección mediante SDN de los atacantes del corredor rojo hacia el interior de la Sala Plateada para su aislamiento total.",
+        "cli_command": "medsoc-deception --bypass-decoy SILVER_ROOM_99 --sinkhole-hostiles RED_CORRIDOR_GUARDS"
+      },
+      "prevention": {
+        "standard": "NIST SP 800-53 SC-26 (Decoys / Honeypots) & IEC 62443",
+        "hardening_policy": "Desplegar gemelos digitales señuelo (Clinical Honeypots) con datos sintéticos marcados en cada piso hospitalario para detectar intrusiones antes de que toquen pacientes reales.",
+        "zero_trust_control": "Aislamiento instantáneo de cualquier credencial o IP que interactúe con un nodo señuelo."
+      }
+    }
+  }
+]
+

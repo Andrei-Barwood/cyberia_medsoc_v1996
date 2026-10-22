@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CYBERIA-MED // SOC Console v19.96 — BLADES Neural &amp; IoMT Telemetry</title>
+  <link rel="stylesheet" href="/css/chrysalis_medsoc.css">
+</head>
+<body>
+  <div class="blades-crt-overlay" aria-hidden="true"></div>
+
+  <!-- CABECERA GLOBAL DEL MEDICAL SOC -->
+  <header class="medsoc-topbar">
+    <div class="brand-block">
+      <div class="blades-emblem" title="BLADES Biocybernetic Sensor v19.96">B</div>
+      <div>
+        <div class="brand-title">CYBERIA-MED // SOC CONSOLE v19.96</div>
+        <div class="brand-subtitle">
+          SUBJECT: ZAK // IMPLANT: BLADES (IR / MRI / BIOMETRIC DPI) // PALETTE: QUEEN CHRYSALIS #523
+        </div>
+      </div>
+    </div>
+
+    <nav class="top-nav-links" aria-label="Navegación Principal del SOC">
+      <a href="/" class="soc-btn <%= request.path_info == '/' ? 'active' : '' %>">
+        [01] CONSOLA SOC (48 EPISODIOS)
+      </a>
+      <a href="/simulators" class="soc-btn <%= request.path_info.start_with?('/simulators') ? 'active' : '' %>">
+        [02] SIMULADORES BLADES MRI &amp; NANOMED EDR
+      </a>
+      <a href="/reports/postmortem-full-48.md" class="soc-btn soc-btn-warning">
+        [03] DESCARGAR POST-MORTEM 48 EP (.MD)
+      </a>
+    </nav>
+  </header>
+
+  <!-- FRANJA DE SIGNOS VITALES ECG (#00F200) Y 6 INDICADORES AZULES DE INTEGRIDAD (EP04 SKEET SHOOT) -->
+  <section class="vitals-ribbon" aria-label="Telemetría de Signos Vitales y Nodos Críticos">
+    <div class="ecg-monitor-box">
+      <div>
+        <div style="font-size: 0.7rem; color: var(--hud-glass-outline);">ZAK // CYBERIA ECG</div>
+        <div id="live-bpm-readout" style="font-size: 0.95rem; font-weight: 700; color: var(--magic-pulse-core);">
+          72 BPM [SYNC 100%]
+        </div>
+      </div>
+      <canvas id="blades-ecg-canvas" class="ecg-canvas" width="165" height="38"></canvas>
+    </div>
+
+    <div class="nodes-six-grid" id="six-hull-nodes">
+      <% (@nodes || TelemetryNode.all).each do |node| %>
+        <div class="hull-node-pill" title="<%= node[:game_ref] %> — Protocol: <%= node[:protocol] %>">
+          <div class="node-id">
+            <span><%= node[:id] %></span>
+            <span style="color: var(--magic-main);"><%= node[:integrity] %>%</span>
+          </div>
+          <div class="node-name"><%= node[:name] %></div>
+        </div>
+      <% end %>
+    </div>
+  </section>
+
+  <%= yield %>
+
+  <script src="/js/cyberia_console.js"></script>
+</body>
+</html>
