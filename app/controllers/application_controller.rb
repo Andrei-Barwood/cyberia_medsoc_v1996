@@ -23,7 +23,7 @@ class ApplicationController < Sinatra::Base
   before do
     headers 'X-Cyberia-SOC-Version' => '19.96-BLADES',
             'X-Medical-Protocol-Engine' => 'HL7-FHIR-DICOM-IEEE11073-ACTIVE',
-            'X-Aegis9-Sentinel-Binary' => Aegis9SentinelService::PRIMARY_BINARY_PATH
+            'X-Aegis9-Sentinel-Binary' => Aegis9SentinelService::BINARY_PATH
   end
 
   helpers do

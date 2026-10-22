@@ -19,7 +19,7 @@ class ApplicationController < Sinatra::Base
 
       json_response({
         sentinel: 'Aegis9CyberbrainEDR',
-        binary_path: Aegis9SentinelService::PRIMARY_BINARY_PATH,
+        binary_path: Aegis9SentinelService::BINARY_PATH,
         session: session,
         cumulative_patches_total: Aegis9SentinelService.deployed_patches.size,
         cumulative_patches: Aegis9SentinelService.deployed_patches
@@ -41,7 +41,7 @@ class ApplicationController < Sinatra::Base
 
       json_response({
         sentinel: 'Aegis9CyberbrainEDR',
-        binary_path: Aegis9SentinelService::PRIMARY_BINARY_PATH,
+        binary_path: Aegis9SentinelService::BINARY_PATH,
         session: session,
         cumulative_patches_total: Aegis9SentinelService.deployed_patches.size,
         cumulative_patches: Aegis9SentinelService.deployed_patches
@@ -57,7 +57,7 @@ class ApplicationController < Sinatra::Base
       )
       json_response({
         sentinel: 'Aegis9CyberbrainEDR',
-        binary_path: Aegis9SentinelService::PRIMARY_BINARY_PATH,
+        binary_path: Aegis9SentinelService::BINARY_PATH,
         total_patches: patches.size,
         patches: patches
       })

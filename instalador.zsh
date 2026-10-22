@@ -34,14 +34,9 @@ if ! command -v bundle >/dev/null 2>&1 || ! ruby -e \
   export PATH="$(ruby -rrubygems -e 'print Gem.user_dir')/bin:$PATH"
 fi
 
-AEGIS_SOURCE="/Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR"
 AEGIS_TARGET="$PROJECT_ROOT/bin/Aegis9CyberbrainEDR"
 if [[ ! -x "$AEGIS_TARGET" ]]; then
-  [[ -x "$AEGIS_SOURCE" ]] || fail "No se encontró el binario Aegis9 ejecutable en bin/ ni en $AEGIS_SOURCE."
-  mkdir -p "${AEGIS_TARGET:h}"
-  print -- "Copiando Aegis9CyberbrainEDR al proyecto..."
-  cp "$AEGIS_SOURCE" "$AEGIS_TARGET"
-  chmod +x "$AEGIS_TARGET"
+  fail "No se encontró el ejecutable Aegis9 en bin/Aegis9CyberbrainEDR."
 fi
 
 print -- "Instalando dependencias Ruby del proyecto..."

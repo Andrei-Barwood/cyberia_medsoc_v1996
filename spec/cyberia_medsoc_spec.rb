@@ -230,14 +230,12 @@ RSpec.describe 'CYBERIA-MED // SOC Console v19.96 — Complete Verification Suit
       post '/api/sentinel/reset'
     end
 
-    it 'verifica el binario Mach-O arm64 en /Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR' do
+    it 'verifica el binario Mach-O arm64 incluido en el proyecto' do
       get '/api/sentinel/status', { verify_binary: 'true' }
       expect(last_response.status).to eq(200)
       status = JSON.parse(last_response.body)
 
-      expect(status.dig('binary', 'configured_path')).to eq(
-        '/Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR'
-      )
+      expect(status.dig('binary', 'configured_path')).to eq(Aegis9SentinelService::BINARY_PATH)
       expect(status.dig('binary', 'binary_present')).to be(true)
       expect(status.dig('binary', 'executable_mach_o_arm64')).to be(true)
       expect(status.dig('killchain_cli_verification', 'executed')).to be(true)

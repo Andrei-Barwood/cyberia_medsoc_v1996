@@ -5,8 +5,7 @@
    2. 48-Episode Filtering (Act I-VI, Clinical Protocol, Instant Search)
    3. Dynamic Fetch of Episode Spoiler & 4 Clinical Pillars
    4. Interactive CLI Playbook Execution & Topology Sector Highlighting
-   5. Live Reaction & Debugging by Native Sentinel Aegis9CyberbrainEDR
-      (/Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR)
+   5. Live Reaction & Debugging by Native Sentinel Aegis9CyberbrainEDR,
       showing deployed patches in exact deployment order classified by:
       PREVENCIÓN, DETECCIÓN, MITIGACIÓN, and INCIDENT RESPONSE.
    ========================================================================== */

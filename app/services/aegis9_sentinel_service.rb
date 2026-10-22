@@ -8,9 +8,8 @@ require 'time'
 require_relative '../models/episode'
 
 class Aegis9SentinelService
-  PRIMARY_BINARY_PATH = '/Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR'
-  LOCAL_BINARY_PATH   = File.expand_path('../../bin/Aegis9CyberbrainEDR', __dir__)
-  BRIDGE_URL          = 'http://127.0.0.1:9909'
+  BINARY_PATH = File.expand_path('../../bin/Aegis9CyberbrainEDR', __dir__)
+  BRIDGE_URL = 'http://127.0.0.1:9909'
 
   SENSOR_MAP = {
     'T1195' => {
@@ -72,9 +71,7 @@ class Aegis9SentinelService
 
   class << self
     def binary_path
-      return PRIMARY_BINARY_PATH if File.exist?(PRIMARY_BINARY_PATH)
-
-      LOCAL_BINARY_PATH
+      BINARY_PATH
     end
 
     def binary_metadata
@@ -85,7 +82,7 @@ class Aegis9SentinelService
       size_bytes = exists ? File.size(path) : 0
 
       {
-        configured_path: PRIMARY_BINARY_PATH,
+        configured_path: BINARY_PATH,
         resolved_path: path,
         binary_present: exists,
         executable_mach_o_arm64: executable,
@@ -139,7 +136,7 @@ class Aegis9SentinelService
       }
     end
 
-    # Ejecuta el binario real `/Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR --verify-killchain`
+    # Ejecuta el verificador del binario Aegis9 incluido en el proyecto.
     def run_killchain_cli
       path = binary_path
       return { executed: false, error: 'Binary not found' } unless File.exist?(path)
@@ -204,7 +201,7 @@ class Aegis9SentinelService
       cli_trace = execute_native_cli ? run_killchain_cli : nil
 
       debug_steps = [
-        "[AEGIS9-ATTACH] Binario '#{PRIMARY_BINARY_PATH}' acoplado al episodio #{ep['code']} (#{ep['game_node_code']}).",
+        "[AEGIS9-ATTACH] Binario '#{BINARY_PATH}' acoplado al episodio #{ep['code']} (#{ep['game_node_code']}).",
         "[BREAKPOINT-CVE] Sonda activa sobre #{v['cve']} (CVSS #{v['cvss']}) en activo IoMT: #{ep['iomt_asset']} [Protocolo: #{ep['clinical_protocol']}].",
         "[SENSOR-RING-1] Módulo '#{sensor_info[:sensor]}' (#{sensor_info[:phase]}) interceptó técnica #{ep['mitre_technique']}.",
         "[PATCH-SEQ #1 -> PREVENCIÓN] Aplicada política #{p['standard']}: #{p['zero_trust_control']}",
@@ -223,7 +220,7 @@ class Aegis9SentinelService
         cvss_score: v['cvss'],
         clinical_protocol: ep['clinical_protocol'],
         iomt_asset: ep['iomt_asset'],
-        aegis9_binary: PRIMARY_BINARY_PATH,
+        aegis9_binary: BINARY_PATH,
         aegis9_sensor: sensor_info[:sensor],
         aegis9_phase: sensor_info[:phase],
         mapped_aegis_mitre: sensor_info[:aegis_code],

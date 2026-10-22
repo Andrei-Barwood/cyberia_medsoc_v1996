@@ -7,7 +7,7 @@ Consola de operaciones de seguridad clínica inspirada en la aventura de ciencia
 - macOS con Apple Silicon.
 - Zsh, Ruby 3.2 o posterior y Bundler 4.0.23.
 - Homebrew solo es necesario si el instalador debe añadir Ruby.
-- El ejecutable `Aegis9CyberbrainEDR` se incluye en `bin/`. Si falta, el instalador intenta copiarlo desde `/Users/andreibarwood/apple/fire-starter/.build/arm64-apple-macosx/debug/Aegis9CyberbrainEDR`.
+- El ejecutable `Aegis9CyberbrainEDR` se incluye en `bin/`.
 
 ## Instalación
 
